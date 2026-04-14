@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fire Sprinkler — Water Pressure Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0f0d;
+    --surface: #131714;
+    --surface2: #1a1f1c;
+    --surface3: #202620;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --blue: #38bdf8;
+    --blue-dim: rgba(56,189,248,0.12);
+    --blue-mid: rgba(56,189,248,0.35);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.12);
+    --amber: #f59e0b;
+    --amber-dim: rgba(245,158,11,0.12);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.12);
+    --text: #edf2ee;
+    --muted: #5a6b60;
+    --muted2: #8a9e8f;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 2.5rem 1rem 5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .wrap { width: 100%; max-width: 600px; }
+
+  /* header */
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-bottom: .4rem;
+  }
+
+  h1 { font-size: 28px; font-weight: 600; line-height: 1.15; }
+  h1 span { color: var(--blue); }
+  .subtitle { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: .4rem; margin-bottom: 2rem; }
+
+  /* section label */
+  .sec {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 1.75rem 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sec::after { content:''; flex:1; height:1px; background: var(--border2); }
+
+  /* city badge */
+  .city-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue-dim);
+    border: 1px solid rgba(56,189,248,.25);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--blue);
+    letter-spacing: .06em;
+    margin-left: auto;
+  }
+  .city-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--blue); }
+
+  /* cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem 1.5rem;
+    margin-bottom: .75rem;
+  }
+
+  .card.city-card { border-color: rgba(56,189,248,.2); }
+
+  /* input rows */
+  .row { display:flex; align-items:center; gap:12px; margin-bottom:1.1rem; }
+  .row:last-child { margin-bottom:0; }
+  .lbl { font-size:13px; color:var(--muted2); width:190px; flex-shrink:0; line-height:1.35; }
+  .lbl small { display:block; font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:1px; }
+  .val { font-family:var(--mono); font-size:13px; font-weight:500; min-width:72px; text-align:right; color:var(--text); }
+
+  input[type="range"] {
+    flex:1; appearance:none; -webkit-appearance:none;
+    height:3px; background:var(--surface3); border-radius:2px;
+    outline:none; cursor:pointer; border:1px solid var(--border2);
+  }
+  input[type="range"].city-range::-webkit-slider-thumb { background:var(--blue); box-shadow:0 0 0 1px var(--blue); }
+  input[type="range"].city-range::-moz-range-thumb { background:var(--blue); }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance:none; width:16px; height:16px; border-radius:50%;
+    background:var(--green); cursor:pointer; border:2px solid var(--bg); box-shadow:0 0 0 1px var(--green);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width:16px; height:16px; border-radius:50%;
+    background:var(--green); cursor:pointer; border:2px solid var(--bg);
+  }
+
+  select {
+    width:100%; font-family:var(--mono); font-size:13px; padding:9px 14px;
+    background:var(--surface2); color:var(--text);
+    border:1px solid var(--border2); border-radius:8px;
+    outline:none; cursor:pointer; appearance:none; -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6b60' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center; margin-top:.25rem;
+  }
+  select:focus { border-color:var(--green); }
+
+  /* number inputs */
+  .num-input-wrap { flex:1; display:flex; align-items:center; gap:6px; }
+  input[type="number"] {
+    width:80px; font-family:var(--mono); font-size:14px; font-weight:500;
+    background:var(--surface2); color:var(--text);
+    border:1px solid var(--border2); border-radius:8px;
+    padding:7px 10px; outline:none; text-align:center;
+  }
+  input[type="number"]:focus { border-color:var(--blue); }
+  input[type="number"].city-num:focus { border-color:var(--blue); }
+  .unit { font-family:var(--mono); font-size:12px; color:var(--muted); }
+
+  /* metrics grid */
+  .metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:1rem 0; }
+  .m { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+  .m-lbl { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+  .m-val { font-family:var(--mono); font-size:22px; font-weight:500; color:var(--text); }
+  .m-val.ok  { color:var(--green); }
+  .m-val.warn{ color:var(--amber); }
+  .m-val.bad { color:var(--red); }
+
+  /* status bar */
+  .status-bar { border-radius:10px; padding:14px 18px; font-size:13px; font-weight:500; margin-top:.5rem; display:flex; align-items:flex-start; gap:10px; }
+  .status-bar .icon { width:18px; height:18px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; margin-top:1px; }
+  .status-bar.ok  { background:rgba(34,197,94,.1);  border:1px solid rgba(34,197,94,.25);  color:var(--green); }
+  .status-bar.warn{ background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.25); color:var(--amber); }
+  .status-bar.bad { background:rgba(239,68,68,.1);  border:1px solid rgba(239,68,68,.25);  color:var(--red); }
+  .status-bar.ok  .icon { background:rgba(34,197,94,.2); }
+  .status-bar.warn .icon { background:rgba(245,158,11,.2); }
+  .status-bar.bad  .icon { background:rgba(239,68,68,.2); }
+  .status-detail { font-family:var(--mono); font-size:11px; opacity:.75; margin-top:4px; }
+
+  /* pipe diagram */
+  .pipe-wrap { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:1.25rem; margin-top:1rem; }
+  .pipe-title { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.75rem; }
+  canvas { display:block; width:100%; }
+
+  /* flow curve */
+  .curve-wrap { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.4rem 1.5rem; margin-top:.75rem; }
+  .curve-title { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; }
+
+  footer { margin-top:2rem; font-family:var(--mono); font-size:11px; color:var(--muted); text-align:center; line-height:1.7; }
+  footer strong { color:var(--muted2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">NFPA 13 — Fire Suppression</p>
+    <h1>Water <span>Pressure</span><br>Calculator</h1>
+    <p class="subtitle">// city supply → friction & elevation loss → head pressure</p>
+  </header>
+
+  <!-- CITY WATER SUPPLY -->
+  <div class="sec">City water supply <span class="city-badge"><span class="dot"></span>from fire flow test</span></div>
+  <div class="card city-card">
+    <div class="row">
+      <span class="lbl">Static pressure<small>hydrant at rest, no flow</small></span>
+      <div class="num-input-wrap">
+        <input type="number" id="static" class="city-num" min="10" max="200" value="80">
+        <span class="unit">PSI</span>
+      </div>
+    </div>
+    <div class="row">
+      <span class="lbl">Residual pressure<small>hydrant under flow test</small></span>
+      <div class="num-input-wrap">
+        <input type="number" id="residual" class="city-num" min="10" max="180" value="62">
+        <span class="unit">PSI</span>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:0">
+      <span class="lbl">Flow at residual<small>GPM flowing during test</small></span>
+      <div class="num-input-wrap">
+        <input type="number" id="flow" class="city-num" min="50" max="3000" value="750">
+        <span class="unit">GPM</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEM -->
+  <div class="sec">System configuration</div>
+  <div class="card">
+    <div class="row">
+      <span class="lbl">Elevation above supply<small>floor height above street main</small></span>
+      <input type="range" id="elev" min="0" max="100" value="12" step="1">
+      <span class="val" id="elev-out">12 ft</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Pipe length to farthest head<small>measured + fittings equiv.</small></span>
+      <input type="range" id="pipelen" min="10" max="600" value="120" step="5">
+      <span class="val" id="pipelen-out">120 ft</span>
+    </div>
+    <div class="row" style="flex-wrap:wrap;align-items:flex-start">
+      <span class="lbl" style="padding-top:6px">Pipe diameter<small>schedule 10 or 40 steel</small></span>
+      <div style="flex:1">
+        <select id="pipedia">
+          <option value="1">1 in — C=120</option>
+          <option value="1.25">1¼ in — C=120</option>
+          <option value="1.5">1½ in — C=120</option>
+          <option value="2" selected>2 in — C=120</option>
+          <option value="2.5">2½ in — C=120</option>
+          <option value="3">3 in — C=120</option>
+          <option value="4">4 in — C=120</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:0">
+      <span class="lbl">System demand flow<small>total GPM required by design</small></span>
+      <input type="range" id="demand" min="10" max="500" value="100" step="5">
+      <span class="val" id="demand-out">100 GPM</span>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="sec">Results</div>
+  <div class="metrics">
+    <div class="m"><p class="m-lbl">Available at supply</p><p class="m-val" id="avail-psi">—</p></div>
+    <div class="m"><p class="m-lbl">Elevation loss</p><p class="m-val" id="elev-loss">—</p></div>
+    <div class="m"><p class="m-lbl">Friction loss (H-W)</p><p class="m-val" id="fric-loss">—</p></div>
+    <div class="m"><p class="m-lbl">Pressure at head</p><p class="m-val" id="head-psi">—</p></div>
+  </div>
+
+  <div class="status-bar ok" id="status">
+    <div class="icon" id="status-icon">✓</div>
+    <div><div id="status-msg">—</div><div class="status-detail" id="status-detail"></div></div>
+  </div>
+
+  <!-- PIPE DIAGRAM -->
+  <div class="pipe-wrap">
+    <p class="pipe-title">// pressure profile — supply to head</p>
+    <canvas id="pipe-canvas" height="90"></canvas>
+  </div>
+
+  <!-- FLOW CURVE -->
+  <div class="curve-wrap">
+    <p class="curve-title">// city flow curve — available pressure vs demand</p>
+    <canvas id="curve-canvas" height="180"></canvas>
+  </div>
+
+  <footer>
+    <strong>For reference only.</strong><br>
+    Always verify with a licensed fire protection engineer or NICET-certified designer.<br>
+    Hazen-Williams C=120 (steel pipe). Min head pressure per NFPA 13: 7 PSI.
+  </footer>
+
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+
+function getVals(){
+  return {
+    staticP: Math.max(10, +$('static').value || 80),
+    residP:  Math.max(10, +$('residual').value || 62),
+    residFlow: Math.max(50, +$('flow').value || 750),
+    elev:    +$('elev').value,
+    pipeLen: +$('pipelen').value,
+    pipeDia: +$('pipedia').value,
+    demand:  +$('demand').value,
+  };
+}
+
+// Hazen-Williams friction loss (PSI) per NFPA 13 method
+function hazen(Q, D, C, L) {
+  return 6.817 * (L / Math.pow(C, 1.852)) * (Math.pow(Q, 1.852) / Math.pow(D, 4.8704));
+}
+
+// Available pressure at a given flow using the city flow test data
+// Uses the hydraulic gradient: P_avail = static - (static - residual) * (Q/Qresid)^1.85
+function availableAtFlow(Q, staticP, residP, residFlow) {
+  const drop = staticP - residP;
+  return staticP - drop * Math.pow(Q / residFlow, 1.85);
+}
+
+function calc() {
+  const {staticP, residP, residFlow, elev, pipeLen, pipeDia, demand} = getVals();
+
+  $('elev-out').textContent   = elev + ' ft';
+  $('pipelen-out').textContent = pipeLen + ' ft';
+  $('demand-out').textContent  = demand + ' GPM';
+
+  const elevLoss  = +(elev * 0.433).toFixed(2);
+  const fricLoss  = +hazen(demand, pipeDia, 120, pipeLen).toFixed(2);
+  const totalLoss = +(elevLoss + fricLoss).toFixed(2);
+
+  // available city pressure at the system demand flow
+  const availPSI  = +availableAtFlow(demand, staticP, residP, residFlow).toFixed(1);
+  const headPSI   = +(availPSI - totalLoss).toFixed(1);
+
+  $('avail-psi').textContent = availPSI + ' PSI';
+  $('elev-loss').textContent = elevLoss + ' PSI';
+  $('fric-loss').textContent = fricLoss + ' PSI';
+
+  const hEl = $('head-psi');
+  hEl.textContent = headPSI + ' PSI';
+
+  const sb = $('status'), icon = $('status-icon'), msg = $('status-msg'), det = $('status-detail');
+  const margin = headPSI - 7;
+
+  if (headPSI >= 14) {
+    hEl.className = 'm-val ok';
+    sb.className = 'status-bar ok';
+    icon.textContent = '✓';
+    msg.textContent  = 'PASS — good pressure at sprinkler head';
+    det.textContent  = margin.toFixed(1) + ' PSI above 7 PSI minimum';
+  } else if (headPSI >= 7) {
+    hEl.className = 'm-val warn';
+    sb.className = 'status-bar warn';
+    icon.textContent = '!';
+    msg.textContent  = 'MARGINAL — barely meets 7 PSI minimum';
+    det.textContent  = 'Only ' + margin.toFixed(1) + ' PSI of margin — consider upsizing pipe';
+  } else {
+    hEl.className = 'm-val bad';
+    sb.className = 'status-bar bad';
+    icon.textContent = '✕';
+    msg.textContent  = 'FAIL — insufficient pressure at head';
+    det.textContent  = Math.abs(margin).toFixed(1) + ' PSI short of minimum — redesign required';
+  }
+
+  drawPipe(availPSI, elevLoss, fricLoss, headPSI, staticP);
+  drawCurve(staticP, residP, residFlow, demand, totalLoss);
+}
+
+function drawPipe(availPSI, elevLoss, fricLoss, headPSI, staticP) {
+  const canvas = $('pipe-canvas');
+  const ctx = canvas.getContext('2d');
+  const cw = canvas.parentElement.clientWidth - 40;
+  canvas.width = cw; canvas.height = 90;
+  ctx.clearRect(0, 0, cw, 90);
+
+  const maxP = Math.max(staticP * 1.1, 100);
+  const margin = 12, py = 20, ph = 24, pw = cw - margin * 2;
+
+  const colors = {
+    bg:     'rgba(255,255,255,0.05)',
+    water:  'rgba(56,189,248,0.35)',
+    wbord:  'rgba(56,189,248,0.7)',
+    eloss:  'rgba(245,158,11,0.4)',
+    floss:  'rgba(239,68,68,0.35)',
+    text:   'rgba(255,255,255,0.35)',
+    green:  '#22c55e',
+    amber:  '#f59e0b',
+    red:    '#ef4444',
+  };
+
+  // pipe background
+  ctx.fillStyle = colors.bg;
+  roundRect(ctx, margin, py, pw, ph, 4);
+  ctx.fill();
+
+  // available city water fill
+  const availW = pw * Math.min(availPSI / maxP, 1);
+  ctx.fillStyle = colors.water;
+  roundRect(ctx, margin, py, availW, ph, 4);
+  ctx.fill();
+  ctx.strokeStyle = colors.wbord;
+  ctx.lineWidth = 1;
+  roundRect(ctx, margin, py, availW, ph, 4);
+  ctx.stroke();
+
+  // elevation loss segment
+  const elevX = margin + availW;
+  const elevW = pw * (elevLoss / maxP);
+  ctx.fillStyle = colors.eloss;
+  roundRect(ctx, elevX, py, Math.max(elevW, 2), ph, 0);
+  ctx.fill();
+
+  // friction loss segment
+  const fricX = elevX + elevW;
+  const fricW = pw * (fricLoss / maxP);
+  ctx.fillStyle = 'rgba(239,68,68,0.3)';
+  roundRect(ctx, fricX, py, Math.max(fricW, 2), ph, 0);
+  ctx.fill();
+
+  // head marker
+  const headX = margin + pw * Math.max(headPSI, 0) / maxP;
+  const headColor = headPSI >= 14 ? colors.green : headPSI >= 7 ? colors.amber : colors.red;
+  ctx.strokeStyle = headColor; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(headX, py - 6); ctx.lineTo(headX, py + ph + 6); ctx.stroke();
+  ctx.beginPath(); ctx.arc(headX, py - 8, 4, 0, Math.PI * 2);
+  ctx.fillStyle = headColor; ctx.fill();
+
+  ctx.font = '10px DM Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(56,189,248,0.8)';
+  ctx.fillText(availPSI + ' PSI', margin + availW / 2, py + ph + 16);
+  ctx.fillStyle = headColor;
+  ctx.fillText(headPSI + ' PSI', headX, py - 14);
+  ctx.fillStyle = colors.text;
+  ctx.textAlign = 'left';  ctx.fillText('0', margin, py + ph - 7);
+  ctx.textAlign = 'right'; ctx.fillText(Math.round(maxP) + ' PSI', margin + pw, py + ph - 7);
+
+  // legend
+  ctx.font = '10px DM Mono, monospace'; ctx.textAlign = 'left';
+  const lx = margin, ly = py + ph + 28;
+  drawSwatch(ctx, lx, ly - 7, colors.water); ctx.fillStyle = colors.text; ctx.fillText('city supply', lx + 14, ly);
+  drawSwatch(ctx, lx + 90, ly - 7, colors.eloss); ctx.fillStyle = colors.text; ctx.fillText('elev loss', lx + 104, ly);
+  drawSwatch(ctx, lx + 176, ly - 7, 'rgba(239,68,68,0.55)'); ctx.fillStyle = colors.text; ctx.fillText('friction loss', lx + 190, ly);
+}
+
+function drawSwatch(ctx, x, y, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, 10, 10);
+}
+
+function drawCurve(staticP, residP, residFlow, demand, totalLoss) {
+  const canvas = $('curve-canvas');
+  const ctx = canvas.getContext('2d');
+  const cw = canvas.parentElement.clientWidth - 40;
+  canvas.width = cw; canvas.height = 180;
+  ctx.clearRect(0, 0, cw, 180);
+
+  const maxQ = Math.max(residFlow * 1.5, demand * 2, 500);
+  const maxP = staticP * 1.1;
+  const ml = 44, mr = 14, mt = 14, mb = 32;
+  const pw = cw - ml - mr, ph2 = 180 - mt - mb;
+
+  const qx = q  => ml + (q / maxQ)  * pw;
+  const py2 = p => mt + (1 - p / maxP) * ph2;
+
+  // grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = mt + (i / 4) * ph2;
+    ctx.beginPath(); ctx.moveTo(ml, y); ctx.lineTo(ml + pw, y); ctx.stroke();
+    const label = Math.round(maxP * (1 - i / 4));
+    ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.font = '10px DM Mono, monospace';
+    ctx.textAlign = 'right'; ctx.fillText(label, ml - 5, y + 4);
+  }
+  for (let i = 0; i <= 4; i++) {
+    const x = ml + (i / 4) * pw;
+    ctx.beginPath(); ctx.moveTo(x, mt); ctx.lineTo(x, mt + ph2); ctx.stroke();
+    const label = Math.round(maxQ * (i / 4));
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.textAlign = 'center'; ctx.fillText(label, x, mt + ph2 + 16);
+  }
+
+  // axes labels
+  ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.font = '10px DM Mono, monospace';
+  ctx.textAlign = 'center'; ctx.fillText('flow (GPM)', ml + pw / 2, 180 - 2);
+  ctx.save(); ctx.translate(10, mt + ph2 / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('pressure (PSI)', 0, 0); ctx.restore();
+
+  // city flow curve
+  ctx.beginPath(); ctx.strokeStyle = 'rgba(56,189,248,0.8)'; ctx.lineWidth = 2;
+  let first = true;
+  for (let q = 0; q <= maxQ; q += maxQ / 200) {
+    const p = staticP - (staticP - residP) * Math.pow(q / residFlow, 1.85);
+    if (p < 0) break;
+    first ? ctx.moveTo(qx(q), py2(p)) : ctx.lineTo(qx(q), py2(p));
+    first = false;
+  }
+  ctx.stroke();
+
+  // system demand line (pressure needed = totalLoss + 7 minimum, shown as horizontal)
+  const minNeeded = totalLoss + 7;
+  ctx.beginPath(); ctx.strokeStyle = 'rgba(245,158,11,0.7)'; ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 4]);
+  ctx.moveTo(ml, py2(minNeeded)); ctx.lineTo(ml + pw, py2(minNeeded));
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // operating point
+  const availAtDemand = staticP - (staticP - residP) * Math.pow(demand / residFlow, 1.85);
+  const opX = qx(demand), opY = py2(availAtDemand);
+  const headAtOp = availAtDemand - totalLoss;
+  const opColor = headAtOp >= 14 ? '#22c55e' : headAtOp >= 7 ? '#f59e0b' : '#ef4444';
+
+  ctx.beginPath(); ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+  ctx.moveTo(opX, mt); ctx.lineTo(opX, opY);
+  ctx.moveTo(ml, opY); ctx.lineTo(opX, opY);
+  ctx.stroke(); ctx.setLineDash([]);
+
+  ctx.beginPath(); ctx.arc(opX, opY, 6, 0, Math.PI * 2);
+  ctx.fillStyle = opColor; ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.lineWidth = 1; ctx.stroke();
+
+  // legend
+  ctx.font = '10px DM Mono, monospace'; ctx.textAlign = 'left';
+  const lx = ml + 8, ly = mt + 16;
+  ctx.strokeStyle = 'rgba(56,189,248,0.8)'; ctx.lineWidth = 2; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(lx, ly - 4); ctx.lineTo(lx + 18, ly - 4); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.fillText('city curve', lx + 22, ly);
+  ctx.strokeStyle = 'rgba(245,158,11,0.7)'; ctx.lineWidth = 1.5; ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(lx, ly + 14); ctx.lineTo(lx + 18, ly + 14); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.fillText('min needed', lx + 22, ly + 18);
+  ctx.beginPath(); ctx.arc(lx + 9, ly + 32, 5, 0, Math.PI * 2);
+  ctx.fillStyle = opColor; ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.fillText('operating point', lx + 22, ly + 36);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+// wire up all inputs
+['static','residual','flow'].forEach(id => $(id).addEventListener('input', calc));
+document.querySelectorAll('input[type="number"]').forEach(el => el.addEventListener('input', calc));
+document.querySelectorAll('input[type="range"]').forEach(el => el.addEventListener('input', calc));
+$('pipedia').addEventListener('change', calc);
+window.addEventListener('resize', calc);
+calc();
+</script>
+</body>
+</html>

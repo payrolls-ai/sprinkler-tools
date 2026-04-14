@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprinkler Coverage Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e1110;
+    --surface: #161a17;
+    --surface2: #1d2420;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.15);
+    --green-mid: rgba(34,197,94,0.35);
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --text: #f0f4f1;
+    --muted: #6b7c70;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  header {
+    margin-bottom: 2rem;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text);
+  }
+
+  h1 span { color: var(--green); }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    font-family: var(--mono);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.1rem;
+  }
+
+  .slider-row:last-child { margin-bottom: 0; }
+
+  .slider-label {
+    font-size: 13px;
+    color: var(--muted);
+    width: 90px;
+    flex-shrink: 0;
+    font-family: var(--mono);
+  }
+
+  input[type="range"] {
+    flex: 1;
+    appearance: none;
+    -webkit-appearance: none;
+    height: 3px;
+    background: var(--surface2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid var(--border2);
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--green);
+    cursor: pointer;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--green);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--green);
+    cursor: pointer;
+    border: 2px solid var(--bg);
+  }
+
+  .slider-val {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 50px;
+    text-align: right;
+    color: var(--text);
+  }
+
+  select {
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7c70' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+  }
+
+  select:focus { border-color: var(--green); }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .metric {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .metric-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .metric-value {
+    font-size: 22px;
+    font-weight: 600;
+    font-family: var(--mono);
+    color: var(--text);
+  }
+
+  .metric-value.ok  { color: var(--green); }
+  .metric-value.warn { color: var(--amber); }
+  .metric-value.bad  { color: var(--red); }
+
+  .canvas-wrap {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 1rem;
+  }
+
+  canvas { display: block; width: 100%; }
+
+  footer {
+    margin-top: 1.5rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">NFPA 13 — Fire Suppression</p>
+    <h1>Sprinkler <span>Coverage</span><br>Calculator</h1>
+    <p class="subtitle">// quick head-count estimator</p>
+  </header>
+
+  <div class="card">
+    <p class="card-title">// room dimensions</p>
+    <div class="slider-row">
+      <span class="slider-label">Length</span>
+      <input type="range" id="len" min="10" max="80" value="30" step="1">
+      <span class="slider-val" id="len-out">30 ft</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Width</span>
+      <input type="range" id="wid" min="10" max="60" value="20" step="1">
+      <span class="slider-val" id="wid-out">20 ft</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="card-title">// sprinkler type</p>
+    <select id="type">
+      <option value="130">Standard — 130 sq ft max coverage</option>
+      <option value="200" selected>Extended coverage — 200 sq ft max</option>
+      <option value="144">Residential — 144 sq ft max</option>
+    </select>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><p class="metric-label">Room area</p><p class="metric-value" id="area">600 sq ft</p></div>
+    <div class="metric"><p class="metric-label">Heads needed</p><p class="metric-value ok" id="heads">3</p></div>
+    <div class="metric"><p class="metric-label">Max spacing</p><p class="metric-value" id="spacing">—</p></div>
+    <div class="metric"><p class="metric-label">Coverage / head</p><p class="metric-value" id="cph">—</p></div>
+  </div>
+
+  <div class="canvas-wrap">
+    <canvas id="room" height="200"></canvas>
+  </div>
+
+  <footer>for reference only — always verify with a licensed designer</footer>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const lenEl = $('len'), widEl = $('wid'), typeEl = $('type');
+
+function calc() {
+  const L = +lenEl.value, W = +widEl.value, maxCov = +typeEl.value;
+  $('len-out').textContent = L + ' ft';
+  $('wid-out').textContent = W + ' ft';
+
+  const area = L * W;
+  $('area').textContent = area.toLocaleString() + ' sq ft';
+
+  const maxSpacing = Math.round(Math.sqrt(maxCov));
+  $('spacing').textContent = maxSpacing + ' ft';
+
+  const cols = Math.ceil(L / maxSpacing);
+  const rows = Math.ceil(W / maxSpacing);
+  const heads = cols * rows;
+  const cph = Math.round(area / heads);
+
+  $('heads').textContent = heads;
+  $('cph').textContent = cph + ' sq ft';
+
+  const hEl = $('heads');
+  hEl.className = 'metric-value ' + (heads <= 6 ? 'ok' : heads <= 12 ? 'warn' : 'bad');
+
+  drawRoom(L, W, cols, rows);
+}
+
+function drawRoom(L, W, cols, rows) {
+  const canvas = $('room');
+  const ctx = canvas.getContext('2d');
+  const cw = canvas.parentElement.clientWidth - 32;
+  canvas.width = cw;
+
+  const scale = Math.min((cw - 60) / L, 180 / W);
+  const rw = L * scale, rh = W * scale;
+  canvas.height = rh + 50;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const ox = (cw - rw) / 2, oy = 16;
+
+  // room fill
+  ctx.fillStyle = 'rgba(255,255,255,0.03)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth = 1.5;
+  roundRect(ctx, ox, oy, rw, rh, 4);
+  ctx.fill(); ctx.stroke();
+
+  // grid lines
+  const spx = rw / cols, spy = rh / rows;
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 0.5;
+  for (let c = 1; c < cols; c++) {
+    ctx.beginPath(); ctx.moveTo(ox + c * spx, oy); ctx.lineTo(ox + c * spx, oy + rh); ctx.stroke();
+  }
+  for (let r = 1; r < rows; r++) {
+    ctx.beginPath(); ctx.moveTo(ox, oy + r * spy); ctx.lineTo(ox + rw, oy + r * spy); ctx.stroke();
+  }
+
+  // coverage circles + heads
+  for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < rows; r++) {
+      const cx = ox + (c + 0.5) * spx;
+      const cy = oy + (r + 0.5) * spy;
+      const rad = Math.min(spx, spy) * 0.44;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(34,197,94,0.08)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(34,197,94,0.3)';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      // head dot
+      ctx.beginPath();
+      ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#22c55e';
+      ctx.fill();
+
+      // crosshair
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(cx - 8, cy); ctx.lineTo(cx + 8, cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, cy - 8); ctx.lineTo(cx, cy + 8); ctx.stroke();
+    }
+  }
+
+  // dimension labels
+  ctx.fillStyle = 'rgba(107,124,112,0.9)';
+  ctx.font = '11px "DM Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(L + ' ft', ox + rw / 2, oy + rh + 18);
+  ctx.save();
+  ctx.translate(ox - 16, oy + rh / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(W + ' ft', 0, 0);
+  ctx.restore();
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+[lenEl, widEl, typeEl].forEach(el => el.addEventListener('input', calc));
+window.addEventListener('resize', calc);
+calc();
+</script>
+</body>
+</html>
