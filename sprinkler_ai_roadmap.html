@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprinkler AI — Project Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e14;
+    --bg2: #111820;
+    --bg3: #1a2230;
+    --accent: #ff5c2b;
+    --accent2: #00c9a7;
+    --accent3: #4d9fff;
+    --text: #e8edf5;
+    --muted: #6b7a90;
+    --border: #1e2d3d;
+    --done-bg: #0d2a1e;
+    --done-border: #00c9a7;
+    --active-bg: #1a1408;
+    --active-border: #ff5c2b;
+    --locked-bg: #0e1420;
+    --locked-border: #1e2d3d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(77,159,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(77,159,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 48px;
+  }
+
+  .header-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .header h1 {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .header h1 span {
+    color: var(--accent);
+  }
+
+  .header p {
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 300;
+  }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    margin: 32px 0;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    height: 6px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent3));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  .progress-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Stage */
+  .stage {
+    margin-bottom: 16px;
+    border: 1px solid var(--locked-border);
+    border-radius: 10px;
+    background: var(--locked-bg);
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .stage.done {
+    border-color: var(--done-border);
+    background: var(--done-bg);
+  }
+
+  .stage.active {
+    border-color: var(--active-border);
+    background: var(--active-bg);
+    box-shadow: 0 0 24px rgba(255,92,43,0.08);
+  }
+
+  .stage-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .stage-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    min-width: 28px;
+    letter-spacing: 1px;
+  }
+
+  .stage.done .stage-num { color: var(--accent2); }
+  .stage.active .stage-num { color: var(--accent); }
+
+  .stage-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .stage.done .stage-icon { background: #0a2e1f; border-color: var(--done-border); }
+  .stage.active .stage-icon { background: #2a1500; border-color: var(--active-border); }
+
+  .stage-info { flex: 1; }
+
+  .stage-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .stage-sub {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .stage-badges {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .badge-done { background: rgba(0,201,167,0.15); color: var(--accent2); border: 1px solid rgba(0,201,167,0.3); }
+  .badge-active { background: rgba(255,92,43,0.15); color: var(--accent); border: 1px solid rgba(255,92,43,0.3); }
+  .badge-locked { background: rgba(107,122,144,0.1); color: var(--muted); border: 1px solid var(--border); }
+
+  .chevron {
+    color: var(--muted);
+    font-size: 12px;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .stage.open .chevron { transform: rotate(180deg); }
+
+  /* Stage body */
+  .stage-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .stage.open .stage-body { display: block; }
+
+  /* Tools row */
+  .tools-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0 20px;
+  }
+
+  .tool-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--accent3);
+    background: rgba(77,159,255,0.06);
+    letter-spacing: 0.5px;
+  }
+
+  /* Checklist */
+  .checklist {
+    list-style: none;
+    margin-bottom: 20px;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(30,45,61,0.6);
+    font-size: 14px;
+    color: var(--text);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li:hover { color: #fff; }
+
+  .checklist li.checked { color: var(--muted); text-decoration: line-through; }
+
+  .check-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.2s;
+    font-size: 10px;
+  }
+
+  .checklist li.checked .check-box {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    color: #fff;
+  }
+
+  /* How-to box */
+  .howto {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent3);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 4px;
+  }
+
+  .howto-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--accent3);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .howto p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .howto code {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    background: rgba(77,159,255,0.1);
+    color: var(--accent3);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  /* Nav buttons */
+  .nav-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #ff7a50; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { color: var(--text); border-color: var(--muted); }
+
+  .btn-done {
+    background: rgba(0,201,167,0.15);
+    color: var(--accent2);
+    border: 1px solid rgba(0,201,167,0.3);
+  }
+  .btn-done:hover { background: rgba(0,201,167,0.25); }
+
+  /* Diagram section */
+  .diagram-section {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .diagram-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+
+  .tool-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    transition: all 0.2s;
+  }
+
+  .tool-card:hover { border-color: var(--accent3); background: var(--bg3); }
+
+  .tool-card.missing {
+    border-style: dashed;
+    border-color: rgba(255,92,43,0.4);
+  }
+
+  .tool-card .tc-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .tool-card.missing .tc-name { color: var(--accent); }
+
+  .tool-card .tc-desc {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .tool-card .tc-tag {
+    display: inline-block;
+    margin-top: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .tc-tag-have { background: rgba(0,201,167,0.1); color: var(--accent2); }
+  .tc-tag-need { background: rgba(255,92,43,0.1); color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 24px; }
+    .stage-badges { display: none; }
+    .tool-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-tag">// project roadmap v1.0</div>
+    <h1>Sprinkler <span>AI</span> Design Tool</h1>
+    <p>Los Angeles — NFPA 13 · California Amendments · LAMC · LADBS</p>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+  </div>
+  <div class="progress-label">
+    <span id="progressText">0 of 0 tasks complete</span>
+    <span id="progressPct">0%</span>
+  </div>
+
+  <div id="stages"></div>
+
+  <!-- Tool map -->
+  <div class="diagram-section">
+    <div class="diagram-label">// full tool stack</div>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tc-name">GitHub</div>
+        <div class="tc-desc">Code storage &amp; version control</div>
+        <span class="tc-tag tc-tag-have">Have</span>
+      </div>
+      <div class="tool-card">
+        <div class="tc-name">VS Code</div>
+        <div class="tc-desc">Write &amp; edit your code</div>
+        <span class="tc-tag tc-tag-have">Have</span>
+      </div>
+      <div class="tool-card">
+        <div class="tc-name">Claude Code</div>
+        <div class="tc-desc">AI coding assistant</div>
+        <span class="tc-tag tc-tag-have">Have</span>
+      </div>
+      <div class="tool-card">
+        <div class="tc-name">Google Colab</div>
+        <div class="tc-desc">Train your GAN model</div>
+        <span class="tc-tag tc-tag-have">Have</span>
+      </div>
+      <div class="tool-card">
+        <div class="tc-name">Google Drive</div>
+        <div class="tc-desc">Save notebooks &amp; files</div>
+        <span class="tc-tag tc-tag-have">Have</span>
+      </div>
+      <div class="tool-card missing">
+        <div class="tc-name">DVC</div>
+        <div class="tc-desc">Version control for training images</div>
+        <span class="tc-tag tc-tag-need">Add</span>
+      </div>
+      <div class="tool-card missing">
+        <div class="tc-name">PDF Parser</div>
+        <div class="tc-desc">Read floor plan files</div>
+        <span class="tc-tag tc-tag-need">Add</span>
+      </div>
+      <div class="tool-card missing">
+        <div class="tc-name">W&amp;B</div>
+        <div class="tc-desc">Track model training runs</div>
+        <span class="tc-tag tc-tag-need">Add</span>
+      </div>
+      <div class="tool-card missing">
+        <div class="tc-name">Model Host</div>
+        <div class="tc-desc">Serve AI to clients</div>
+        <span class="tc-tag tc-tag-need">Add</span>
+      </div>
+      <div class="tool-card missing">
+        <div class="tc-name">Output Layer</div>
+        <div class="tc-desc">Export to CAD / PDF</div>
+        <span class="tc-tag tc-tag-need">Add</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const stagesData = [
+  {
+    id: 1,
+    icon: '📐',
+    title: 'Gather training data',
+    sub: 'Collect approved sprinkler drawings from real LA projects',
+    status: 'active',
+    tools: ['Google Drive', 'GitHub', 'Scanner / PDF'],
+    tasks: [
+      'Collect 50+ completed sprinkler design drawings (LADBS approved)',
+      'Scan or export drawings as high-res PNG or TIFF images',
+      'Create two folders: floor_plans_clean and floor_plans_with_heads',
+      'Label each pair so they match (same building, same floor)',
+      'Store everything in a Google Drive folder called /training_data',
+      'Back up to GitHub using DVC (Data Version Control)',
+    ],
+    howto: `Your GAN (Generative Adversarial Network — the AI model) needs to see pairs of images: a blank floor plan AND the same floor plan with sprinkler heads already drawn on it. The more pairs you have, the smarter it gets. Shoot for at least 50 pairs to start. You can pull these from old job files — any LADBS-approved set works. Export them from AutoCAD as <code>PNG</code> at 300 DPI (dots per inch — basically image quality). Save them to Google Drive in two folders side by side.`
+  },
+  {
+    id: 2,
+    icon: '⚙️',
+    title: 'Set up your environment',
+    sub: 'Install tools and connect everything together',
+    status: 'locked',
+    tools: ['VS Code', 'GitHub Desktop', 'Google Colab', 'Python'],
+    tasks: [
+      'Install VS Code on your computer',
+      'Install GitHub Desktop and connect to your GitHub account',
+      'Install Python 3.10 or later on your computer',
+      'Create a new GitHub repo called sprinkler-ai',
+      'Clone that repo to your computer using GitHub Desktop',
+      'Open the repo folder in VS Code',
+      'Install DVC with: pip install dvc',
+      'Connect Google Colab to your Google Drive',
+    ],
+    howto: `Think of this stage as setting up your workshop before you start building. VS Code is your workbench. GitHub is your filing cabinet. Google Colab is your heavy-duty power tool (it uses Google's computers to train the AI so your laptop doesn't have to). All three need to talk to each other. The connection happens through your GitHub repo — both VS Code and Colab can read and write to it. When you run <code>git clone</code> in VS Code, it downloads your GitHub repo to your computer so you can work on it locally.`
+  },
+  {
+    id: 3,
+    icon: '🧠',
+    title: 'Build the GAN model',
+    sub: 'Set up pix2pixHD in Google Colab',
+    status: 'locked',
+    tools: ['Google Colab', 'pix2pixHD', 'PyTorch', 'GitHub'],
+    tasks: [
+      'Open Google Colab and connect to a GPU (Graphics Processing Unit — fast computer chip for AI)',
+      'Clone the pix2pixHD repo from GitHub into Colab',
+      'Mount your Google Drive so Colab can see your training images',
+      'Resize all training images to 512x512 pixels',
+      'Run the data loader to check your image pairs load correctly',
+      'Set NFPA 13 sprinkler spacing rules as training constraints',
+      'Start your first training run (start with 50 epochs — passes through the data)',
+      'Save model checkpoints to Google Drive every 10 epochs',
+    ],
+    howto: `pix2pixHD is a ready-made AI framework (a pre-built toolkit) that learns to translate one type of image into another. You're teaching it: "when you see THIS floor plan, put sprinkler heads HERE." In Colab, you get free access to a GPU (Graphics Processing Unit) which is way faster than a regular computer for this kind of work. An epoch is one full pass through all your training images — like reading a textbook once. You'll need many passes before the AI gets good. Save checkpoints (snapshots of progress) so you don't lose work if Colab times out.`
+  },
+  {
+    id: 4,
+    icon: '📏',
+    title: 'Add NFPA 13 rules',
+    sub: 'Bake code compliance into the AI output',
+    status: 'locked',
+    tools: ['VS Code', 'Python', 'Claude Code', 'NFPA 13 standard'],
+    tasks: [
+      'Write a Python function that checks max sprinkler spacing (15 ft standard hazard)',
+      'Write a function that checks min distance from walls (4 inches)',
+      'Add California Title 19 amendment checks',
+      'Add LAMC (Los Angeles Municipal Code) obstruction rules',
+      'Build a post-processing step that flags violations in red',
+      'Write unit tests for each rule (small tests that check one thing at a time)',
+      'Test against 5 known-good approved drawings to verify',
+    ],
+    howto: `The AI alone won't know the difference between a legal and illegal sprinkler placement — it just copies patterns. You need to write a separate set of rules in Python that double-checks the AI's output. Think of it like a spell-checker but for code compliance. After the AI places heads, your rules script runs over the drawing and says "this one is too close to that beam" or "this zone needs one more head." Claude Code is great for helping you write these checking functions — just paste in the relevant NFPA 13 section and ask it to turn it into code.`
+  },
+  {
+    id: 5,
+    icon: '🔌',
+    title: 'Build the input pipeline',
+    sub: 'Accept real floor plan files from clients',
+    status: 'locked',
+    tools: ['Python', 'pdfplumber', 'ezdxf', 'VS Code'],
+    tasks: [
+      'Install pdfplumber: pip install pdfplumber',
+      'Install ezdxf for AutoCAD files: pip install ezdxf',
+      'Write a script that converts PDF floor plans to PNG images',
+      'Write a script that converts DWG/DXF (AutoCAD) files to PNG',
+      'Add image preprocessing: resize, clean up noise, normalize colors',
+      'Test with 10 real client floor plan files',
+      'Handle errors gracefully (what if the file is corrupted?)',
+    ],
+    howto: `Right now your AI only understands images (PNG files). But your clients give you PDFs or AutoCAD DWG files. This stage builds the front door — the part that takes whatever file a client sends and converts it into something the AI can read. <code>pdfplumber</code> is a Python library (a free toolkit) that reads PDFs. <code>ezdxf</code> reads AutoCAD files. Both are free and install in one line. The output is always the same: a clean PNG image that goes into the AI. Think of it like a car wash for dirty input files.`
+  },
+  {
+    id: 6,
+    icon: '📊',
+    title: 'Track and improve the model',
+    sub: 'Measure how good the AI is getting',
+    status: 'locked',
+    tools: ['Weights & Biases', 'Google Colab', 'Python'],
+    tasks: [
+      'Create a free account at wandb.ai (Weights & Biases)',
+      'Install W&B in Colab: pip install wandb',
+      'Add W&B logging to your training script',
+      'Track: loss score, spacing accuracy, wall clearance accuracy',
+      'Run 3 training experiments with different settings',
+      'Compare results in the W&B dashboard',
+      'Pick the best model checkpoint and save it as your v1 model',
+    ],
+    howto: `W&B (Weights & Biases) is like a scoreboard for your AI training. Every time you run a training session, it automatically records how well the AI is doing and draws charts so you can see improvement over time. Without it, you're flying blind — you'd have no idea if changing a setting made things better or worse. It's free for personal projects. You just add a few lines of code to your Colab notebook and it starts tracking everything automatically. After a few runs you'll be able to see exactly which settings produce the most accurate sprinkler placements.`
+  },
+  {
+    id: 7,
+    icon: '🚀',
+    title: 'Deploy and deliver',
+    sub: 'Make it usable for clients and LADBS submittals',
+    status: 'locked',
+    tools: ['Hugging Face Spaces', 'Python', 'ezdxf', 'Gradio'],
+    tasks: [
+      'Create a free Hugging Face account at huggingface.co',
+      'Upload your trained model to Hugging Face',
+      'Build a simple web UI using Gradio (drag and drop floor plan → get design)',
+      'Add export to DXF (AutoCAD) format using ezdxf',
+      'Add export to PDF with sprinkler head legend and notes',
+      'Add a disclaimer: output must be reviewed by licensed engineer',
+      'Test end-to-end with 3 real projects',
+      'Share the link with your first test client',
+    ],
+    howto: `Hugging Face Spaces is like YouTube but for AI apps — it hosts your model for free and gives you a public URL anyone can visit. Gradio is a Python tool that builds a simple drag-and-drop web interface in about 10 lines of code. So your workflow becomes: client uploads floor plan → AI places heads → download as DXF for AutoCAD or PDF for LADBS submittal. The disclaimer is important — you're a professional tool, not a replacement for a licensed engineer. Position it as a first-draft generator that cuts design time by 80%, not as a fully automated stamped drawing.`
+  },
+];
+
+let checkStates = {};
+
+function getStatus(stage) {
+  if (stage.status === 'done') return 'done';
+  if (stage.status === 'active') return 'active';
+  return 'locked';
+}
+
+function getBadge(status) {
+  if (status === 'done') return '<span class="badge badge-done">Done</span>';
+  if (status === 'active') return '<span class="badge badge-active">In Progress</span>';
+  return '<span class="badge badge-locked">Locked</span>';
+}
+
+function renderStages() {
+  const container = document.getElementById('stages');
+  container.innerHTML = stagesData.map((s, idx) => {
+    const status = getStatus(s);
+    const tasks = s.tasks.map((t, ti) => {
+      const key = `${s.id}-${ti}`;
+      const checked = checkStates[key] ? 'checked' : '';
+      return `<li class="${checked}" onclick="toggleTask('${key}', this)">
+        <span class="check-box">${checked ? '✓' : ''}</span>
+        <span>${t}</span>
+      </li>`;
+    }).join('');
+
+    const tools = s.tools.map(t => `<span class="tool-chip">${t}</span>`).join('');
+
+    return `<div class="stage ${status}" id="stage-${s.id}">
+      <div class="stage-header" onclick="toggleStage(${s.id})">
+        <span class="stage-num">0${s.id}</span>
+        <div class="stage-icon">${s.icon}</div>
+        <div class="stage-info">
+          <div class="stage-title">${s.title}</div>
+          <div class="stage-sub">${s.sub}</div>
+        </div>
+        <div class="stage-badges">${getBadge(status)}</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="stage-body">
+        <div class="tools-row">${tools}</div>
+        <ul class="checklist">${tasks}</ul>
+        <div class="howto">
+          <div class="howto-label">// how to</div>
+          <p>${s.howto}</p>
+        </div>
+        <div class="nav-row">
+          <button class="btn btn-done" onclick="markStageDone(${s.id})">✓ Mark stage done</button>
+          ${idx < stagesData.length - 1 ? `<button class="btn btn-primary" onclick="advanceStage(${s.id})">Next stage →</button>` : ''}
+          <button class="btn btn-secondary" onclick="toggleStage(${s.id})">Collapse</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  updateProgress();
+}
+
+function toggleStage(id) {
+  const el = document.getElementById(`stage-${id}`);
+  el.classList.toggle('open');
+}
+
+function toggleTask(key, li) {
+  checkStates[key] = !checkStates[key];
+  li.classList.toggle('checked', checkStates[key]);
+  li.querySelector('.check-box').textContent = checkStates[key] ? '✓' : '';
+  updateProgress();
+  saveState();
+}
+
+function markStageDone(id) {
+  const stage = stagesData.find(s => s.id === id);
+  stage.status = 'done';
+  // mark all tasks checked
+  stage.tasks.forEach((_, ti) => { checkStates[`${id}-${ti}`] = true; });
+  renderStages();
+  saveState();
+}
+
+function advanceStage(id) {
+  const stage = stagesData.find(s => s.id === id);
+  stage.status = 'done';
+  stage.tasks.forEach((_, ti) => { checkStates[`${id}-${ti}`] = true; });
+  const next = stagesData.find(s => s.id === id + 1);
+  if (next && next.status === 'locked') next.status = 'active';
+  renderStages();
+  // auto-open next
+  setTimeout(() => {
+    const nextEl = document.getElementById(`stage-${id + 1}`);
+    if (nextEl) { nextEl.classList.add('open'); nextEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }, 100);
+  saveState();
+}
+
+function updateProgress() {
+  let total = 0, done = 0;
+  stagesData.forEach(s => {
+    s.tasks.forEach((_, ti) => {
+      total++;
+      if (checkStates[`${s.id}-${ti}`]) done++;
+    });
+  });
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done} of ${total} tasks complete`;
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function saveState() {
+  try {
+    const state = {
+      checks: checkStates,
+      stages: stagesData.map(s => ({ id: s.id, status: s.status }))
+    };
+    localStorage.setItem('sprinkler_ai_roadmap', JSON.stringify(state));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('sprinkler_ai_roadmap');
+    if (!raw) return;
+    const state = JSON.parse(raw);
+    checkStates = state.checks || {};
+    if (state.stages) {
+      state.stages.forEach(ss => {
+        const s = stagesData.find(x => x.id === ss.id);
+        if (s) s.status = ss.status;
+      });
+    }
+  } catch(e) {}
+}
+
+loadState();
+renderStages();
+// auto-open active stage
+const activeStage = stagesData.find(s => s.status === 'active');
+if (activeStage) setTimeout(() => { document.getElementById(`stage-${activeStage.id}`)?.classList.add('open'); }, 100);
+</script>
+</body>
+</html>
