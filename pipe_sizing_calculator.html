@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fire Sprinkler — Pipe Sizing Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0f0d;
+    --surface: #131714;
+    --surface2: #1a1f1c;
+    --surface3: #202620;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.12);
+    --green-border: rgba(34,197,94,0.35);
+    --amber: #f59e0b;
+    --amber-dim: rgba(245,158,11,0.12);
+    --amber-border: rgba(245,158,11,0.35);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.12);
+    --red-border: rgba(239,68,68,0.35);
+    --text: #edf2ee;
+    --muted: #5a6b60;
+    --muted2: #8a9e8f;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 2.5rem 1rem 5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .wrap { width: 100%; max-width: 640px; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: .4rem;
+  }
+
+  h1 { font-size: 28px; font-weight: 600; line-height: 1.15; }
+  h1 span { color: var(--green); }
+  .subtitle { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: .4rem; margin-bottom: 2rem; }
+
+  .sec {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 1.75rem 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sec::after { content:''; flex:1; height:1px; background: var(--border2); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem 1.5rem;
+    margin-bottom: .75rem;
+  }
+
+  .row { display:flex; align-items:center; gap:12px; margin-bottom:1.1rem; }
+  .row:last-child { margin-bottom:0; }
+  .lbl { font-size:13px; color:var(--muted2); width:190px; flex-shrink:0; line-height:1.4; }
+  .lbl small { display:block; font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:1px; }
+  .val { font-family:var(--mono); font-size:13px; font-weight:500; min-width:72px; text-align:right; color:var(--text); }
+
+  input[type="range"] {
+    flex:1; appearance:none; -webkit-appearance:none;
+    height:3px; background:var(--surface3); border-radius:2px;
+    outline:none; cursor:pointer; border:1px solid var(--border2);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance:none; width:16px; height:16px; border-radius:50%;
+    background:var(--green); cursor:pointer; border:2px solid var(--bg);
+    box-shadow:0 0 0 1px var(--green);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width:16px; height:16px; border-radius:50%;
+    background:var(--green); cursor:pointer; border:2px solid var(--bg);
+  }
+
+  select {
+    width:100%; font-family:var(--mono); font-size:13px; padding:9px 14px;
+    background:var(--surface2); color:var(--text);
+    border:1px solid var(--border2); border-radius:8px;
+    outline:none; cursor:pointer; appearance:none; -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6b60' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center; margin-top:.25rem;
+  }
+  select:focus { border-color:var(--green); }
+
+  /* pipe grid */
+  .pipe-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: .5rem 0 1rem;
+  }
+
+  .pipe-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+
+  .pipe-card.selected {
+    border: 2px solid var(--green-border);
+    background: var(--green-dim);
+  }
+
+  .pipe-card.over {
+    border-color: var(--red-border);
+    background: var(--red-dim);
+  }
+
+  .pipe-card.tight {
+    border-color: var(--amber-border);
+    background: var(--amber-dim);
+  }
+
+  .pipe-dia {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+  .pipe-card.selected .pipe-dia { color: var(--green); }
+  .pipe-card.over .pipe-dia { color: var(--red); }
+  .pipe-card.tight .pipe-dia { color: var(--amber); }
+
+  .pipe-stat { font-family: var(--mono); font-size: 11px; color: var(--muted2); margin-top: 2px; }
+
+  .pipe-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  .badge-ok  { background: var(--green-dim);  color: var(--green); border: 1px solid var(--green-border); }
+  .badge-warn{ background: var(--amber-dim);  color: var(--amber); border: 1px solid var(--amber-border); }
+  .badge-bad { background: var(--red-dim);    color: var(--red);   border: 1px solid var(--red-border); }
+
+  /* metrics */
+  .metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:1rem 0; }
+  .m { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+  .m-lbl { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+  .m-val { font-family:var(--mono); font-size:22px; font-weight:500; color:var(--text); }
+  .m-val.ok  { color:var(--green); }
+  .m-val.warn{ color:var(--amber); }
+  .m-val.bad { color:var(--red); }
+
+  /* recommendation */
+  .rec-box {
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    color: var(--green);
+  }
+  .rec-box.warn {
+    background: var(--amber-dim);
+    border-color: var(--amber-border);
+    color: var(--amber);
+  }
+  .rec-icon {
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    background: rgba(34,197,94,0.2);
+  }
+  .rec-box.warn .rec-icon { background: rgba(245,158,11,0.2); }
+  .rec-detail { font-family: var(--mono); font-size: 11px; opacity: .8; margin-top: 4px; }
+
+  footer { margin-top:2rem; font-family:var(--mono); font-size:11px; color:var(--muted); text-align:center; line-height:1.7; }
+  footer strong { color:var(--muted2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">NFPA 13 — Fire Suppression</p>
+    <h1>Pipe <span>Sizing</span><br>Calculator</h1>
+    <p class="subtitle">// smallest pipe that fits your pressure budget</p>
+  </header>
+
+  <div class="sec">Inputs</div>
+  <div class="card">
+    <div class="row">
+      <span class="lbl">Design flow<small>GPM through this branch</small></span>
+      <input type="range" id="flow" min="5" max="500" value="80" step="5">
+      <span class="val" id="flow-out">80 GPM</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Pipe length<small>measured + fittings equiv.</small></span>
+      <input type="range" id="plen" min="5" max="400" value="60" step="5">
+      <span class="val" id="plen-out">60 ft</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Pressure loss budget<small>max allowable friction PSI</small></span>
+      <input type="range" id="budget" min="1" max="30" value="8" step="0.5">
+      <span class="val" id="budget-out">8.0 PSI</span>
+    </div>
+    <div class="row" style="flex-wrap:wrap;align-items:flex-start;margin-bottom:0">
+      <span class="lbl" style="padding-top:6px">Pipe material<small>sets Hazen-Williams C value</small></span>
+      <div style="flex:1">
+        <select id="material">
+          <option value="120" selected>Steel schedule 10/40 — C=120</option>
+          <option value="140">Copper — C=140</option>
+          <option value="150">CPVC — C=150</option>
+          <option value="100">Galvanized steel — C=100</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">Recommendation</div>
+  <div class="rec-box" id="rec-box">
+    <div class="rec-icon" id="rec-icon">✓</div>
+    <div>
+      <div id="rec-msg">—</div>
+      <div class="rec-detail" id="rec-detail"></div>
+    </div>
+  </div>
+
+  <div class="sec">All sizes compared</div>
+  <div class="pipe-grid" id="pipe-grid"></div>
+
+  <div class="sec">Selected pipe stats</div>
+  <div class="metrics">
+    <div class="m"><p class="m-lbl">Friction loss</p><p class="m-val" id="loss-val">—</p></div>
+    <div class="m"><p class="m-lbl">Velocity</p><p class="m-val" id="vel-val">—</p></div>
+    <div class="m"><p class="m-lbl">Loss per 10 ft</p><p class="m-val" id="loss-ft">—</p></div>
+    <div class="m"><p class="m-lbl">C factor</p><p class="m-val" id="c-val">—</p></div>
+  </div>
+
+  <footer>
+    <strong>For reference only.</strong><br>
+    Always verify with a licensed fire protection engineer or NICET-certified designer.<br>
+    Hazen-Williams formula. Velocity limit 20 fps per NFPA 13. Internal diameters based on standard schedule pipe.
+  </footer>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const PIPES = [
+  { label: '1 in',   dia: 1.049 },
+  { label: '1¼ in',  dia: 1.380 },
+  { label: '1½ in',  dia: 1.610 },
+  { label: '2 in',   dia: 2.067 },
+  { label: '2½ in',  dia: 2.469 },
+  { label: '3 in',   dia: 3.068 },
+  { label: '4 in',   dia: 4.026 },
+  { label: '5 in',   dia: 5.047 },
+  { label: '6 in',   dia: 6.065 },
+];
+
+function hazen(Q, D, C, L) {
+  return 6.817 * (L / Math.pow(C, 1.852)) * (Math.pow(Q, 1.852) / Math.pow(D, 4.8704));
+}
+
+function velocity(Q, D) {
+  return (0.4085 * Q) / (D * D);
+}
+
+function calc() {
+  const Q      = +$('flow').value;
+  const L      = +$('plen').value;
+  const budget = +$('budget').value;
+  const C      = +$('material').value;
+
+  $('flow-out').textContent   = Q + ' GPM';
+  $('plen-out').textContent   = L + ' ft';
+  $('budget-out').textContent = budget.toFixed(1) + ' PSI';
+  $('c-val').textContent      = C;
+
+  const results = PIPES.map(p => ({
+    loss: hazen(Q, p.dia, C, L),
+    vel:  velocity(Q, p.dia),
+  }));
+
+  // recommended = smallest pipe within budget AND velocity <= 20 fps
+  let recIdx = results.findIndex(r => r.loss <= budget && r.vel <= 20);
+  if (recIdx === -1) recIdx = PIPES.length - 1;
+
+  const rec = results[recIdx];
+
+  $('loss-val').textContent = rec.loss.toFixed(2) + ' PSI';
+  $('vel-val').textContent  = rec.vel.toFixed(1)  + ' fps';
+  $('loss-ft').textContent  = ((rec.loss / L) * 10).toFixed(2) + ' PSI';
+
+  $('loss-val').className = 'm-val ' + (rec.loss <= budget ? 'ok' : rec.loss <= budget * 1.2 ? 'warn' : 'bad');
+  $('vel-val').className  = 'm-val ' + (rec.vel  <= 15    ? 'ok' : rec.vel  <= 20            ? 'warn' : 'bad');
+
+  // recommendation box
+  const rb = $('rec-box'), ri = $('rec-icon');
+  const rm = $('rec-msg'), rd = $('rec-detail');
+
+  if (rec.loss <= budget && rec.vel <= 20) {
+    rb.className = 'rec-box';
+    ri.textContent = '✓';
+    rm.textContent = 'Use ' + PIPES[recIdx].label + ' pipe';
+    rd.textContent = rec.loss.toFixed(2) + ' PSI loss (' + Math.round(rec.loss / budget * 100) + '% of budget) — ' + rec.vel.toFixed(1) + ' fps velocity';
+  } else {
+    rb.className = 'rec-box warn';
+    ri.textContent = '!';
+    rm.textContent = 'No standard size fits within budget';
+    rd.textContent = 'Increase pressure budget, shorten the run, or split into parallel branches';
+  }
+
+  // pipe grid
+  const grid = $('pipe-grid');
+  grid.innerHTML = '';
+
+  PIPES.forEach((p, i) => {
+    const r = results[i];
+    const isRec  = i === recIdx && rec.loss <= budget && rec.vel <= 20;
+    const isOver = r.loss > budget || r.vel > 20;
+    const isTight = !isOver && r.loss > budget * 0.85;
+
+    let cardClass = 'pipe-card';
+    if (isRec)        cardClass += ' selected';
+    else if (isOver)  cardClass += ' over';
+    else if (isTight) cardClass += ' tight';
+
+    let badgeClass = 'badge-ok';
+    let badgeText  = 'fits';
+    if (r.vel > 20)           { badgeClass = 'badge-bad';  badgeText = 'vel too high'; }
+    else if (r.loss > budget) { badgeClass = 'badge-bad';  badgeText = 'over budget'; }
+    else if (isTight)         { badgeClass = 'badge-warn'; badgeText = 'tight fit'; }
+    else if (isRec)           { badgeClass = 'badge-ok';   badgeText = 'recommended'; }
+
+    const card = document.createElement('div');
+    card.className = cardClass;
+    card.innerHTML =
+      '<div class="pipe-dia">' + p.label + '</div>' +
+      '<div class="pipe-stat">' + r.loss.toFixed(2) + ' PSI</div>' +
+      '<div class="pipe-stat">' + r.vel.toFixed(1)  + ' fps</div>' +
+      '<span class="pipe-badge ' + badgeClass + '">' + badgeText + '</span>';
+    grid.appendChild(card);
+  });
+}
+
+['flow', 'plen', 'budget'].forEach(id => $(id).addEventListener('input', calc));
+$('material').addEventListener('change', calc);
+window.addEventListener('resize', calc);
+calc();
+</script>
+</body>
+</html>

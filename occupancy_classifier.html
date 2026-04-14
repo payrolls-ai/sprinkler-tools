@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fire Sprinkler — Hazard Occupancy Classifier</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0b0f0d; --surface: #131714; --surface2: #1a1f1c; --surface3: #202620;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+    --purple: #a78bfa; --purple-dim: rgba(167,139,250,0.12); --purple-border: rgba(167,139,250,0.35);
+    --green: #22c55e; --green-dim: rgba(34,197,94,0.12); --green-border: rgba(34,197,94,0.35);
+    --amber: #f59e0b; --amber-dim: rgba(245,158,11,0.12); --amber-border: rgba(245,158,11,0.35);
+    --red: #ef4444; --red-dim: rgba(239,68,68,0.12); --red-border: rgba(239,68,68,0.35);
+    --blue: #38bdf8; --blue-dim: rgba(56,189,248,0.10); --blue-border: rgba(56,189,248,0.30);
+    --text: #edf2ee; --muted: #5a6b60; --muted2: #8a9e8f;
+    --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif;
+  }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; padding:2.5rem 1rem 5rem; display:flex; justify-content:center; }
+  .wrap { width:100%; max-width:640px; }
+  .eyebrow { font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--purple); text-transform:uppercase; margin-bottom:.4rem; }
+  h1 { font-size:28px; font-weight:600; line-height:1.15; }
+  h1 span { color:var(--purple); }
+  .subtitle { font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:.4rem; margin-bottom:2rem; }
+  .sec { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:1.75rem 0 1rem; display:flex; align-items:center; gap:10px; }
+  .sec::after { content:''; flex:1; height:1px; background:var(--border2); }
+  .search-wrap { position:relative; margin-bottom:1rem; }
+  .search-wrap input { width:100%; background:var(--surface); color:var(--text); border:1px solid var(--border2); border-radius:12px; font-family:var(--sans); font-size:15px; padding:14px 18px; outline:none; }
+  .search-wrap input:focus { border-color:var(--purple); }
+  .search-hint { font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:.5rem; margin-left:4px; }
+  .occ-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:1rem; }
+  .occ-btn { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 14px; cursor:pointer; text-align:left; transition:border-color .15s, background .15s; }
+  .occ-btn:hover { border-color:var(--border2); background:var(--surface2); }
+  .occ-btn.selected { border-color:var(--purple-border); background:var(--purple-dim); }
+  .occ-btn.lh { --c: var(--green); }
+  .occ-btn.oh1, .occ-btn.oh2 { --c: var(--amber); }
+  .occ-btn.eh1, .occ-btn.eh2 { --c: var(--red); }
+  .occ-name { font-size:13px; font-weight:500; color:var(--text); margin-bottom:3px; }
+  .occ-cat { font-family:var(--mono); font-size:10px; color:var(--muted2); }
+  .result-card { background:var(--surface); border-radius:14px; padding:1.5rem; margin-bottom:.75rem; border:1px solid var(--border); }
+  .result-card.lh  { border-color:var(--green-border); }
+  .result-card.oh1, .result-card.oh2 { border-color:var(--amber-border); }
+  .result-card.eh1, .result-card.eh2 { border-color:var(--red-border); }
+  .result-class { font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.3rem; }
+  .result-name { font-size:22px; font-weight:600; margin-bottom:1rem; }
+  .result-name.lh  { color:var(--green); }
+  .result-name.oh1, .result-name.oh2 { color:var(--amber); }
+  .result-name.eh1, .result-name.eh2 { color:var(--red); }
+  .specs-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:1rem; }
+  .spec { background:var(--surface2); border-radius:8px; padding:12px 14px; }
+  .spec-lbl { font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+  .spec-val { font-family:var(--mono); font-size:16px; font-weight:500; color:var(--text); }
+  .examples-list { font-size:13px; color:var(--muted2); line-height:1.8; border-top:1px solid var(--border2); padding-top:1rem; }
+  .examples-list strong { color:var(--muted2); font-weight:500; }
+  .no-result { text-align:center; padding:2rem; color:var(--muted); font-family:var(--mono); font-size:13px; }
+  .occ-grid-section { max-height:340px; overflow-y:auto; }
+  footer { margin-top:2rem; font-family:var(--mono); font-size:11px; color:var(--muted); text-align:center; line-height:1.7; }
+  footer strong { color:var(--muted2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">NFPA 13 — Fire Suppression</p>
+    <h1>Hazard Occupancy<br><span>Classifier</span></h1>
+    <p class="subtitle">// look up occupancy class, design density & area</p>
+  </header>
+
+  <div class="sec">Search or browse</div>
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Type a room or building type — office, warehouse, parking..." oninput="filterOcc()">
+  </div>
+  <p class="search-hint">// showing <span id="count">all</span> occupancy types</p>
+
+  <div class="occ-grid-section">
+    <div class="occ-grid" id="occ-grid"></div>
+  </div>
+
+  <div class="sec">Classification result</div>
+  <div id="result-area"><div class="no-result">Select an occupancy type above</div></div>
+
+  <footer>
+    <strong>For reference only.</strong><br>
+    Based on NFPA 13 (2022 edition). California amendments and LAFD requirements may modify these values.<br>
+    Always confirm classification with the Authority Having Jurisdiction (AHJ).
+  </footer>
+</div>
+
+<script>
+const OCCS = [
+  { id:'lh', name:'Light hazard', cat:'LH', density:'0.10', area:'1500', maxSpacing:225, minPres:7,  k:'5.6',
+    examples:'Churches, clubs, educational facilities, hospitals, hotels, libraries, museums, nursing homes, offices, residential, restaurants under 100 seats, theaters, unused attics' },
+  { id:'oh1', name:'Ordinary hazard group 1', cat:'OH1', density:'0.15', area:'1500', maxSpacing:130, minPres:7, k:'5.6',
+    examples:'Parking garages, bakeries, beverage mfg, canneries, dairy products mfg, electronic plants, glass and glass products, laundries, restaurant service areas' },
+  { id:'oh2', name:'Ordinary hazard group 2', cat:'OH2', density:'0.20', area:'1500', maxSpacing:130, minPres:7, k:'5.6 or 8.0',
+    examples:'Cereal mills, chemical operations, confectionery products, distilleries, dry cleaners, feed mills, horse stables, machine shops, mercantile, paper/pulp mills, printing, repair garages, stages, textile mfg, tire mfg, wood machining' },
+  { id:'eh1', name:'Extra hazard group 1', cat:'EH1', density:'0.30', area:'2500', maxSpacing:100, minPres:7, k:'8.0 or 11.2',
+    examples:'Aircraft hangars, combustible metal processing, die casting, metal extruding, plywood/particle board mfg, printing (with inks flash <100°F), rubber reclaiming, saw mills, textile picking, upholstering with foam' },
+  { id:'eh2', name:'Extra hazard group 2', cat:'EH2', density:'0.40', area:'2500', maxSpacing:100, minPres:7, k:'11.2 or 14.0',
+    examples:'Asphalt saturating, flammable liquids spraying, flow coating, manufactured home assembly, open oil quenching, plastics processing, solvent cleaning, varnish/paint dipping' },
+  { id:'lh', name:'Office', cat:'LH', density:'0.10', area:'1500', maxSpacing:225, minPres:7, k:'5.6', examples:'Open offices, private offices, cubicle areas, conference rooms, copy rooms' },
+  { id:'lh', name:'Residential', cat:'LH', density:'0.05', area:'1500', maxSpacing:144, minPres:7, k:'2.8 or 4.2', examples:'Apartments, condos, single-family homes, hotel guest rooms — use NFPA 13R or 13D where applicable' },
+  { id:'lh', name:'Hospital / healthcare', cat:'LH', density:'0.10', area:'1500', maxSpacing:225, minPres:7, k:'5.6', examples:'Patient rooms, corridors, nurses stations, waiting areas, admin offices' },
+  { id:'oh1', name:'Parking garage', cat:'OH1', density:'0.15', area:'3000', maxSpacing:130, minPres:7, k:'5.6', examples:'Above grade open or enclosed parking, ramps — check LAFD for LA-specific amendments' },
+  { id:'oh1', name:'Restaurant / kitchen', cat:'OH1', density:'0.15', area:'1500', maxSpacing:130, minPres:7, k:'5.6', examples:'Dining areas OH1, commercial kitchen may require suppression system per health code' },
+  { id:'oh2', name:'Retail / mercantile', cat:'OH2', density:'0.20', area:'1500', maxSpacing:130, minPres:7, k:'5.6 or 8.0', examples:'Department stores, big box retail, convenience stores, malls — commodity class may elevate hazard' },
+  { id:'oh1', name:'School / classroom', cat:'LH', density:'0.10', area:'1500', maxSpacing:225, minPres:7, k:'5.6', examples:'Classrooms, hallways, auditoriums, gymnasiums — gyms may be OH1' },
+  { id:'oh2', name:'Warehouse (general)', cat:'OH2', density:'0.20', area:'1500', maxSpacing:130, minPres:7, k:'5.6 or 8.0', examples:'General storage up to 12 ft — higher storage requires ESFR or in-rack, check commodity class' },
+  { id:'eh1', name:'Warehouse (high-piled)', cat:'EH1', density:'0.30', area:'2500', maxSpacing:100, minPres:7, k:'8.0 or 11.2', examples:'Storage over 12 ft — Class I-IV commodities. May require ESFR heads per NFPA 13 ch. 20' },
+  { id:'oh1', name:'Auto repair / service', cat:'OH1', density:'0.15', area:'1500', maxSpacing:130, minPres:7, k:'5.6', examples:'Service bays, lube shops, tire centers — fueling areas may require special suppression' },
+  { id:'oh2', name:'Machine shop', cat:'OH2', density:'0.20', area:'1500', maxSpacing:130, minPres:7, k:'5.6 or 8.0', examples:'CNC machines, lathes, mills, welding areas, sheet metal fabrication' },
+  { id:'lh', name:'Library / museum', cat:'LH', density:'0.10', area:'1500', maxSpacing:225, minPres:7, k:'5.6', examples:'Stack areas, reading rooms, exhibit halls, archives — delicate contents may need special suppression' },
+  { id:'oh1', name:'Laundry', cat:'OH1', density:'0.15', area:'1500', maxSpacing:130, minPres:7, k:'5.6', examples:'Commercial laundries, dry cleaners (OH2 if solvents used), linen service facilities' },
+  { id:'eh2', name:'Paint spray booth', cat:'EH2', density:'0.40', area:'2500', maxSpacing:100, minPres:7, k:'11.2 or 14.0', examples:'Auto body, industrial coating — typically requires dedicated suppression system per NFPA 33' },
+  { id:'oh1', name:'Data center / server room', cat:'OH1', density:'0.15', area:'1500', maxSpacing:130, minPres:7, k:'5.6', examples:'IT equipment rooms — may use clean agent (FM-200, Novec) instead of water, check AHJ' },
+];
+
+let selected = null;
+let filtered = OCCS;
+
+function renderGrid(list) {
+  const grid = document.getElementById('occ-grid');
+  document.getElementById('count').textContent = list.length === OCCS.length ? 'all' : list.length;
+  grid.innerHTML = '';
+  list.forEach((o, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'occ-btn ' + o.id + (selected === i ? ' selected' : '');
+    btn.innerHTML = '<div class="occ-name">' + o.name + '</div><div class="occ-cat">NFPA 13 — ' + o.cat + '</div>';
+    btn.onclick = () => selectOcc(i, list);
+    grid.appendChild(btn);
+  });
+}
+
+function selectOcc(i, list) {
+  selected = i;
+  renderGrid(list);
+  const o = list[i];
+  const colorClass = o.id;
+  document.getElementById('result-area').innerHTML =
+    '<div class="result-card ' + colorClass + '">' +
+      '<p class="result-class">NFPA 13 classification</p>' +
+      '<p class="result-name ' + colorClass + '">' + o.name + '</p>' +
+      '<div class="specs-grid">' +
+        '<div class="spec"><p class="spec-lbl">Design density</p><p class="spec-val">' + o.density + ' GPM/sq ft</p></div>' +
+        '<div class="spec"><p class="spec-lbl">Design area</p><p class="spec-val">' + o.area + ' sq ft</p></div>' +
+        '<div class="spec"><p class="spec-lbl">Max head spacing</p><p class="spec-val">' + o.maxSpacing + ' sq ft</p></div>' +
+        '<div class="spec"><p class="spec-lbl">Min pressure</p><p class="spec-val">' + o.minPres + ' PSI</p></div>' +
+        '<div class="spec"><p class="spec-lbl">Typical K-factor</p><p class="spec-val">' + o.k + '</p></div>' +
+        '<div class="spec"><p class="spec-lbl">Total demand (est)</p><p class="spec-val">' + (parseFloat(o.density) * parseInt(o.area)).toFixed(0) + ' GPM</p></div>' +
+      '</div>' +
+      '<div class="examples-list"><strong>Typical occupancies:</strong> ' + o.examples + '</div>' +
+    '</div>';
+}
+
+function filterOcc() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  filtered = q ? OCCS.filter(o => o.name.toLowerCase().includes(q) || o.examples.toLowerCase().includes(q) || o.cat.toLowerCase().includes(q)) : OCCS;
+  selected = null;
+  document.getElementById('result-area').innerHTML = '<div class="no-result">Select an occupancy type above</div>';
+  renderGrid(filtered);
+}
+
+renderGrid(OCCS);
+</script>
+</body>
+</html>

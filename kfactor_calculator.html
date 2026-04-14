@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fire Sprinkler — K-Factor Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0b0f0d; --surface: #131714; --surface2: #1a1f1c; --surface3: #202620;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+    --orange: #f97316; --orange-dim: rgba(249,115,22,0.12); --orange-border: rgba(249,115,22,0.35);
+    --green: #22c55e; --green-dim: rgba(34,197,94,0.12); --green-border: rgba(34,197,94,0.35);
+    --amber: #f59e0b; --amber-dim: rgba(245,158,11,0.12); --amber-border: rgba(245,158,11,0.35);
+    --red: #ef4444; --red-dim: rgba(239,68,68,0.12); --red-border: rgba(239,68,68,0.35);
+    --text: #edf2ee; --muted: #5a6b60; --muted2: #8a9e8f;
+    --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif;
+  }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; padding:2.5rem 1rem 5rem; display:flex; justify-content:center; }
+  .wrap { width:100%; max-width:600px; }
+  .eyebrow { font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--orange); text-transform:uppercase; margin-bottom:.4rem; }
+  h1 { font-size:28px; font-weight:600; line-height:1.15; }
+  h1 span { color:var(--orange); }
+  .subtitle { font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:.4rem; margin-bottom:2rem; }
+  .sec { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:1.75rem 0 1rem; display:flex; align-items:center; gap:10px; }
+  .sec::after { content:''; flex:1; height:1px; background:var(--border2); }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.4rem 1.5rem; margin-bottom:.75rem; }
+  .row { display:flex; align-items:center; gap:12px; margin-bottom:1.1rem; }
+  .row:last-child { margin-bottom:0; }
+  .lbl { font-size:13px; color:var(--muted2); width:190px; flex-shrink:0; line-height:1.4; }
+  .lbl small { display:block; font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:1px; }
+  .val { font-family:var(--mono); font-size:13px; font-weight:500; min-width:72px; text-align:right; color:var(--text); }
+  input[type="range"] { flex:1; appearance:none; -webkit-appearance:none; height:3px; background:var(--surface3); border-radius:2px; outline:none; cursor:pointer; border:1px solid var(--border2); }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--orange); cursor:pointer; border:2px solid var(--bg); box-shadow:0 0 0 1px var(--orange); }
+  input[type="range"]::-moz-range-thumb { width:16px; height:16px; border-radius:50%; background:var(--orange); cursor:pointer; border:2px solid var(--bg); }
+  select { width:100%; font-family:var(--mono); font-size:13px; padding:9px 14px; background:var(--surface2); color:var(--text); border:1px solid var(--border2); border-radius:8px; outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6b60' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; margin-top:.25rem; }
+  select:focus { border-color:var(--orange); }
+  .metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:1rem 0; }
+  .m { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+  .m-lbl { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+  .m-val { font-family:var(--mono); font-size:22px; font-weight:500; color:var(--text); }
+  .m-val.ok { color:var(--green); } .m-val.warn { color:var(--amber); } .m-val.bad { color:var(--red); }
+  .result-hero { background:var(--surface); border:1px solid var(--orange-border); border-radius:14px; padding:1.5rem; text-align:center; margin-bottom:.75rem; }
+  .result-label { font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.5rem; }
+  .result-big { font-family:var(--mono); font-size:48px; font-weight:500; color:var(--orange); line-height:1; }
+  .result-unit { font-family:var(--mono); font-size:14px; color:var(--muted2); margin-top:.4rem; }
+  .mode-toggle { display:flex; gap:8px; margin-bottom:1rem; }
+  .mode-btn { flex:1; padding:10px; font-family:var(--mono); font-size:12px; background:var(--surface2); color:var(--muted2); border:1px solid var(--border2); border-radius:8px; cursor:pointer; text-align:center; transition:all .15s; }
+  .mode-btn.active { background:var(--orange-dim); color:var(--orange); border-color:var(--orange-border); }
+  .mode-section { display:none; }
+  .mode-section.visible { display:block; }
+  footer { margin-top:2rem; font-family:var(--mono); font-size:11px; color:var(--muted); text-align:center; line-height:1.7; }
+  footer strong { color:var(--muted2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">NFPA 13 — Fire Suppression</p>
+    <h1>K-Factor <span>Calculator</span></h1>
+    <p class="subtitle">// flow, pressure & K — solve for any one</p>
+  </header>
+
+  <div class="sec">Solve for</div>
+  <div class="mode-toggle">
+    <div class="mode-btn active" id="btn-flow" onclick="setMode('flow')">Flow (GPM)</div>
+    <div class="mode-btn" id="btn-pressure" onclick="setMode('pressure')">Pressure (PSI)</div>
+    <div class="mode-btn" id="btn-k" onclick="setMode('k')">K-Factor</div>
+  </div>
+
+  <div class="sec">Common K-factors</div>
+  <div class="card">
+    <div class="row" style="margin-bottom:0">
+      <span class="lbl">Quick select<small>loads standard K value</small></span>
+      <div style="flex:1">
+        <select id="k-preset" onchange="applyPreset()">
+          <option value="">— choose a standard head —</option>
+          <option value="1.4">K=1.4 — residential small orifice</option>
+          <option value="2.8">K=2.8 — residential standard</option>
+          <option value="4.2">K=4.2 — standard (old)</option>
+          <option value="5.6">K=5.6 — standard orifice (most common)</option>
+          <option value="8.0">K=8.0 — large orifice</option>
+          <option value="11.2">K=11.2 — extra large orifice</option>
+          <option value="14.0">K=14.0 — extended coverage</option>
+          <option value="16.8">K=16.8 — extended coverage large</option>
+          <option value="25.2">K=25.2 — ESFR (Early Suppression Fast Response)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">Inputs</div>
+  <div class="card">
+    <!-- solve for flow -->
+    <div class="mode-section visible" id="sec-flow">
+      <div class="row">
+        <span class="lbl">K-factor<small>from head spec sheet</small></span>
+        <input type="range" id="k-flow" min="1" max="30" value="5.6" step="0.1">
+        <span class="val" id="k-flow-out">5.6</span>
+      </div>
+      <div class="row" style="margin-bottom:0">
+        <span class="lbl">Pressure at head<small>PSI</small></span>
+        <input type="range" id="p-flow" min="7" max="175" value="15" step="1">
+        <span class="val" id="p-flow-out">15 PSI</span>
+      </div>
+    </div>
+    <!-- solve for pressure -->
+    <div class="mode-section" id="sec-pressure">
+      <div class="row">
+        <span class="lbl">K-factor</span>
+        <input type="range" id="k-pres" min="1" max="30" value="5.6" step="0.1">
+        <span class="val" id="k-pres-out">5.6</span>
+      </div>
+      <div class="row" style="margin-bottom:0">
+        <span class="lbl">Flow (GPM)<small>design flow required</small></span>
+        <input type="range" id="q-pres" min="5" max="300" value="26" step="1">
+        <span class="val" id="q-pres-out">26 GPM</span>
+      </div>
+    </div>
+    <!-- solve for K -->
+    <div class="mode-section" id="sec-k">
+      <div class="row">
+        <span class="lbl">Flow (GPM)<small>measured or required</small></span>
+        <input type="range" id="q-k" min="5" max="300" value="26" step="1">
+        <span class="val" id="q-k-out">26 GPM</span>
+      </div>
+      <div class="row" style="margin-bottom:0">
+        <span class="lbl">Pressure at head<small>PSI</small></span>
+        <input type="range" id="p-k" min="7" max="175" value="22" step="1">
+        <span class="val" id="p-k-out">22 PSI</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">Result</div>
+  <div class="result-hero">
+    <p class="result-label" id="result-label">Flow at head</p>
+    <p class="result-big" id="result-big">—</p>
+    <p class="result-unit" id="result-unit">GPM</p>
+  </div>
+
+  <div class="metrics">
+    <div class="m"><p class="m-lbl">K-factor</p><p class="m-val" id="disp-k">—</p></div>
+    <div class="m"><p class="m-lbl">Pressure</p><p class="m-val" id="disp-p">—</p></div>
+    <div class="m"><p class="m-lbl">Flow</p><p class="m-val" id="disp-q">—</p></div>
+    <div class="m"><p class="m-lbl">Min pressure check</p><p class="m-val" id="disp-check">—</p></div>
+  </div>
+
+  <footer>
+    <strong>For reference only.</strong><br>
+    Formula: Q = K × √P &nbsp;|&nbsp; P = (Q/K)² &nbsp;|&nbsp; K = Q / √P<br>
+    Always verify with a licensed fire protection engineer or NICET-certified designer.
+  </footer>
+</div>
+
+<script>
+let mode = 'flow';
+
+function setMode(m) {
+  mode = m;
+  ['flow','pressure','k'].forEach(id => {
+    document.getElementById('btn-' + id).classList.toggle('active', id === m);
+    document.getElementById('sec-' + id).classList.toggle('visible', id === m);
+  });
+  calc();
+}
+
+function applyPreset() {
+  const v = +document.getElementById('k-preset').value;
+  if (!v) return;
+  ['k-flow','k-pres'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.value = v; }
+  });
+  calc();
+}
+
+function calc() {
+  let K, P, Q;
+
+  if (mode === 'flow') {
+    K = +document.getElementById('k-flow').value;
+    P = +document.getElementById('p-flow').value;
+    document.getElementById('k-flow-out').textContent = K.toFixed(1);
+    document.getElementById('p-flow-out').textContent = P + ' PSI';
+    Q = K * Math.sqrt(P);
+    document.getElementById('result-label').textContent = 'Flow at head';
+    document.getElementById('result-big').textContent   = Q.toFixed(1);
+    document.getElementById('result-unit').textContent  = 'GPM';
+  } else if (mode === 'pressure') {
+    K = +document.getElementById('k-pres').value;
+    Q = +document.getElementById('q-pres').value;
+    document.getElementById('k-pres-out').textContent = K.toFixed(1);
+    document.getElementById('q-pres-out').textContent = Q + ' GPM';
+    P = Math.pow(Q / K, 2);
+    document.getElementById('result-label').textContent = 'Required pressure';
+    document.getElementById('result-big').textContent   = P.toFixed(2);
+    document.getElementById('result-unit').textContent  = 'PSI';
+  } else {
+    Q = +document.getElementById('q-k').value;
+    P = +document.getElementById('p-k').value;
+    document.getElementById('q-k-out').textContent = Q + ' GPM';
+    document.getElementById('p-k-out').textContent = P + ' PSI';
+    K = Q / Math.sqrt(P);
+    document.getElementById('result-label').textContent = 'K-factor';
+    document.getElementById('result-big').textContent   = K.toFixed(2);
+    document.getElementById('result-unit').textContent  = 'K';
+  }
+
+  document.getElementById('disp-k').textContent = K.toFixed(2);
+  document.getElementById('disp-p').textContent = P.toFixed(2) + ' PSI';
+  document.getElementById('disp-q').textContent = Q.toFixed(1) + ' GPM';
+
+  const chk = document.getElementById('disp-check');
+  if (P >= 7) { chk.textContent = 'PASS'; chk.className = 'm-val ok'; }
+  else        { chk.textContent = 'FAIL'; chk.className = 'm-val bad'; }
+}
+
+document.querySelectorAll('input[type="range"]').forEach(el => el.addEventListener('input', calc));
+calc();
+</script>
+</body>
+</html>

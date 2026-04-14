@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fire Sprinkler — Hydraulic Calculation Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0b0f0d; --surface: #131714; --surface2: #1a1f1c; --surface3: #202620;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+    --blue: #38bdf8; --blue-dim: rgba(56,189,248,0.10); --blue-border: rgba(56,189,248,0.30);
+    --green: #22c55e; --green-dim: rgba(34,197,94,0.12); --green-border: rgba(34,197,94,0.35);
+    --amber: #f59e0b; --amber-dim: rgba(245,158,11,0.12); --amber-border: rgba(245,158,11,0.35);
+    --red: #ef4444; --red-dim: rgba(239,68,68,0.12); --red-border: rgba(239,68,68,0.35);
+    --text: #edf2ee; --muted: #5a6b60; --muted2: #8a9e8f;
+    --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif;
+  }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; padding:2.5rem 1rem 5rem; display:flex; justify-content:center; }
+  .wrap { width:100%; max-width:680px; }
+  .eyebrow { font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--blue); text-transform:uppercase; margin-bottom:.4rem; }
+  h1 { font-size:28px; font-weight:600; line-height:1.15; }
+  h1 span { color:var(--blue); }
+  .subtitle { font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:.4rem; margin-bottom:2rem; }
+  .sec { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:1.75rem 0 1rem; display:flex; align-items:center; gap:10px; }
+  .sec::after { content:''; flex:1; height:1px; background:var(--border2); }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.4rem 1.5rem; margin-bottom:.75rem; }
+  .field-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .field-grid.three { grid-template-columns:1fr 1fr 1fr; }
+  .field-grid.full { grid-template-columns:1fr; }
+  .field { display:flex; flex-direction:column; gap:5px; }
+  .field label { font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+  .field input, .field select, .field textarea {
+    background:var(--surface2); color:var(--text);
+    border:1px solid var(--border2); border-radius:8px;
+    font-family:var(--sans); font-size:13px; padding:9px 12px;
+    outline:none; width:100%;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--blue); }
+  .field textarea { resize:vertical; min-height:60px; font-family:var(--mono); font-size:12px; }
+  .field select { appearance:none; -webkit-appearance:none; cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6b60' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; }
+  .calcs-table { width:100%; border-collapse:collapse; }
+  .calcs-table th { font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:8px 10px; text-align:left; border-bottom:1px solid var(--border2); }
+  .calcs-table td { padding:8px 10px; border-bottom:1px solid var(--border); }
+  .calcs-table td input { background:transparent; color:var(--text); border:none; outline:none; font-family:var(--mono); font-size:12px; width:100%; }
+  .calcs-table td input:focus { background:var(--surface3); border-radius:4px; padding:2px 4px; }
+  .calcs-table tr:last-child td { border-bottom:none; }
+  .add-row-btn { font-family:var(--mono); font-size:12px; color:var(--blue); background:transparent; border:1px solid var(--blue-border); border-radius:8px; padding:8px 16px; cursor:pointer; margin-top:10px; width:100%; }
+  .add-row-btn:hover { background:var(--blue-dim); }
+  .del-btn { color:var(--red); background:transparent; border:none; cursor:pointer; font-size:14px; padding:2px 6px; border-radius:4px; }
+  .del-btn:hover { background:var(--red-dim); }
+  .summary-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:1rem 0; }
+  .sm { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+  .sm-lbl { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+  .sm-val { font-family:var(--mono); font-size:18px; font-weight:500; color:var(--text); }
+  .sm-val.ok { color:var(--green); } .sm-val.warn { color:var(--amber); } .sm-val.bad { color:var(--red); }
+  .status-bar { border-radius:10px; padding:14px 18px; font-size:13px; font-weight:500; margin:.5rem 0 1rem; border:1px solid var(--green-border); background:var(--green-dim); color:var(--green); }
+  .status-bar.warn { border-color:var(--amber-border); background:var(--amber-dim); color:var(--amber); }
+  .status-bar.bad  { border-color:var(--red-border);   background:var(--red-dim);   color:var(--red); }
+  .print-btn { width:100%; padding:14px; font-family:var(--mono); font-size:13px; font-weight:500; background:var(--blue-dim); color:var(--blue); border:1px solid var(--blue-border); border-radius:10px; cursor:pointer; margin-top:.5rem; letter-spacing:.06em; }
+  .print-btn:hover { background:rgba(56,189,248,0.18); }
+  footer { margin-top:2rem; font-family:var(--mono); font-size:11px; color:var(--muted); text-align:center; line-height:1.7; }
+  footer strong { color:var(--muted2); }
+
+  @media print {
+    body { background:#fff; color:#000; padding:0; }
+    .wrap { max-width:100%; }
+    .print-btn, .add-row-btn, .del-btn { display:none; }
+    .card { border:1px solid #ccc; border-radius:4px; background:#fff; }
+    .field input, .field select, .field textarea { background:#fff; color:#000; border:1px solid #ccc; }
+    .calcs-table td input { color:#000; }
+    .sm { background:#f5f5f5; border:1px solid #ccc; }
+    .sm-val, .sm-lbl { color:#000; }
+    .status-bar { border:1px solid #ccc; background:#f0f0f0; color:#000; }
+    h1, h1 span { color:#000; }
+    .eyebrow, .subtitle, .sec { color:#666; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">NFPA 13 — Fire Suppression</p>
+    <h1>Hydraulic Calculation<br><span>Summary Sheet</span></h1>
+    <p class="subtitle">// fill in job info — print or save as PDF</p>
+  </header>
+
+  <div class="sec">Project info</div>
+  <div class="card">
+    <div class="field-grid" style="margin-bottom:12px">
+      <div class="field"><label>Project name</label><input type="text" id="proj-name" placeholder="e.g. Sunset Warehouse Unit B"></div>
+      <div class="field"><label>Job number</label><input type="text" id="job-num" placeholder="e.g. 2025-0142"></div>
+    </div>
+    <div class="field-grid" style="margin-bottom:12px">
+      <div class="field"><label>Project address</label><input type="text" id="proj-addr" placeholder="Street address, Los Angeles CA"></div>
+      <div class="field"><label>Date</label><input type="date" id="proj-date"></div>
+    </div>
+    <div class="field-grid">
+      <div class="field"><label>Designer name</label><input type="text" id="designer" placeholder="Name / NICET level"></div>
+      <div class="field"><label>Contractor</label><input type="text" id="contractor" placeholder="Company name"></div>
+    </div>
+  </div>
+
+  <div class="sec">System info</div>
+  <div class="card">
+    <div class="field-grid" style="margin-bottom:12px">
+      <div class="field">
+        <label>System type</label>
+        <select id="sys-type">
+          <option>Wet pipe</option>
+          <option>Dry pipe</option>
+          <option>Pre-action</option>
+          <option>Deluge</option>
+          <option>Residential</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Hazard classification</label>
+        <select id="hazard">
+          <option>Light hazard</option>
+          <option selected>Ordinary hazard group 1</option>
+          <option>Ordinary hazard group 2</option>
+          <option>Extra hazard group 1</option>
+          <option>Extra hazard group 2</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-grid three" style="margin-bottom:12px">
+      <div class="field"><label>Area of application (sq ft)</label><input type="number" id="area" placeholder="1500"></div>
+      <div class="field"><label>Design density (GPM/sq ft)</label><input type="number" id="density" step="0.01" placeholder="0.15"></div>
+      <div class="field"><label>K-factor used</label><input type="number" id="kfactor" step="0.1" placeholder="5.6"></div>
+    </div>
+    <div class="field-grid">
+      <div class="field"><label>Pipe material / C-value</label><select id="pipe-mat"><option value="120">Steel schedule 10/40 — C=120</option><option value="140">Copper — C=140</option><option value="150">CPVC — C=150</option><option value="100">Galvanized — C=100</option></select></div>
+      <div class="field"><label>System volume (gallons)</label><input type="number" id="sys-vol" placeholder="e.g. 85"></div>
+    </div>
+  </div>
+
+  <div class="sec">Water supply (from fire flow test)</div>
+  <div class="card">
+    <div class="field-grid three">
+      <div class="field"><label>Static pressure (PSI)</label><input type="number" id="static" placeholder="80" oninput="calcSummary()"></div>
+      <div class="field"><label>Residual pressure (PSI)</label><input type="number" id="residual" placeholder="62" oninput="calcSummary()"></div>
+      <div class="field"><label>Flow at residual (GPM)</label><input type="number" id="res-flow" placeholder="750" oninput="calcSummary()"></div>
+    </div>
+  </div>
+
+  <div class="sec">Hydraulic calculations</div>
+  <div class="card">
+    <table class="calcs-table">
+      <thead>
+        <tr>
+          <th>Node</th>
+          <th>Flow (GPM)</th>
+          <th>Pipe dia (in)</th>
+          <th>Length (ft)</th>
+          <th>Friction loss (PSI)</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="calcs-body"></tbody>
+    </table>
+    <button class="add-row-btn" onclick="addRow()">+ add row</button>
+  </div>
+
+  <div class="sec">Summary</div>
+  <div class="summary-grid">
+    <div class="sm"><p class="sm-lbl">Total demand flow</p><p class="sm-val" id="sum-flow">— GPM</p></div>
+    <div class="sm"><p class="sm-lbl">Total friction loss</p><p class="sm-val" id="sum-loss">— PSI</p></div>
+    <div class="sm"><p class="sm-lbl">Residual at supply</p><p class="sm-val" id="sum-residual">— PSI</p></div>
+  </div>
+  <div class="status-bar bad" id="status-bar">Enter water supply data to check system status</div>
+
+  <div class="sec">Notes & special conditions</div>
+  <div class="card">
+    <div class="field full">
+      <label>General notes</label>
+      <textarea id="notes" rows="4" placeholder="LAFD requirements, AHJ conditions, special hazards, backflow preventer info..."></textarea>
+    </div>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">print / save as PDF</button>
+
+  <footer>
+    <strong>For reference only.</strong><br>
+    Always verify with a licensed fire protection engineer or NICET-certified designer.<br>
+    LAMC, LAFD, and California amendments to NFPA 13 apply.
+  </footer>
+</div>
+
+<script>
+let rowCount = 0;
+
+function addRow() {
+  rowCount++;
+  const tbody = document.getElementById('calcs-body');
+  const tr = document.createElement('tr');
+  tr.id = 'row-' + rowCount;
+  tr.innerHTML =
+    '<td><input type="text" placeholder="N' + rowCount + '" /></td>' +
+    '<td><input type="number" class="flow-input" step="0.1" placeholder="0" oninput="calcSummary()" /></td>' +
+    '<td><input type="number" step="0.25" placeholder="2" /></td>' +
+    '<td><input type="number" step="1" placeholder="0" /></td>' +
+    '<td><input type="number" class="loss-input" step="0.01" placeholder="0" oninput="calcSummary()" /></td>' +
+    '<td><input type="text" placeholder="branch / main / riser" /></td>' +
+    '<td><button class="del-btn" onclick="delRow(' + rowCount + ')">x</button></td>';
+  tbody.appendChild(tr);
+}
+
+function delRow(id) {
+  const el = document.getElementById('row-' + id);
+  if (el) { el.remove(); calcSummary(); }
+}
+
+function calcSummary() {
+  const flows  = Array.from(document.querySelectorAll('.flow-input')).map(e => +e.value || 0);
+  const losses = Array.from(document.querySelectorAll('.loss-input')).map(e => +e.value || 0);
+  const totalFlow = flows.reduce((a, b) => a + b, 0);
+  const totalLoss = losses.reduce((a, b) => a + b, 0);
+
+  const staticP   = +document.getElementById('static').value   || 0;
+  const residualP = +document.getElementById('residual').value || 0;
+  const resFlow   = +document.getElementById('res-flow').value || 1;
+
+  document.getElementById('sum-flow').textContent = totalFlow.toFixed(1) + ' GPM';
+  document.getElementById('sum-loss').textContent = totalLoss.toFixed(2) + ' PSI';
+
+  const sb = document.getElementById('status-bar');
+
+  if (!staticP || !residualP || !resFlow) {
+    document.getElementById('sum-residual').textContent = '— PSI';
+    sb.className = 'status-bar bad';
+    sb.textContent = 'Enter water supply data above to check system status';
+    return;
+  }
+
+  const availAtDemand = staticP - (staticP - residualP) * Math.pow(totalFlow / resFlow, 1.85);
+  const headPSI = availAtDemand - totalLoss;
+  document.getElementById('sum-residual').textContent = availAtDemand.toFixed(1) + ' PSI';
+
+  if (headPSI >= 14) {
+    sb.className = 'status-bar';
+    sb.textContent = 'PASS — ' + headPSI.toFixed(1) + ' PSI at remote head (min 7 PSI required)';
+  } else if (headPSI >= 7) {
+    sb.className = 'status-bar warn';
+    sb.textContent = 'MARGINAL — ' + headPSI.toFixed(1) + ' PSI at remote head, consider upsizing pipe';
+  } else {
+    sb.className = 'status-bar bad';
+    sb.textContent = 'FAIL — only ' + headPSI.toFixed(1) + ' PSI at remote head, redesign required';
+  }
+}
+
+// set today's date
+document.getElementById('proj-date').value = new Date().toISOString().split('T')[0];
+// start with 3 rows
+addRow(); addRow(); addRow();
+</script>
+</body>
+</html>
