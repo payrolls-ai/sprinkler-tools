@@ -1,0 +1,489 @@
+{
+  "metadata": {
+    "standard": "NFPA 13",
+    "edition": "2019",
+    "extracted_date": "2026-04-17",
+    "note": "Rules extracted from NFPA 13 2019 edition. Project targets 2025 edition — review for any changes before production use.",
+    "source_file": "NFPA_13_2019_ed.pdf",
+    "sections_covered": [
+      "Chapter 3 (Definitions / Hazard Classes)",
+      "Section 9.5 (Position, Location, Spacing — General)",
+      "Chapter 10 (Standard Pendent, Upright, Sidewall Spray Sprinklers)"
+    ]
+  },
+
+  "hazard_classifications": [
+    {
+      "rule_id": "NFPA-HC-001",
+      "source": "NFPA 13",
+      "section": "3.3.134.3",
+      "hazard_class": "Light Hazard",
+      "code": "LH",
+      "color_code": "light_green",
+      "description": "Occupancies where the quantity and/or combustibility of contents is low and fires with relatively low rates of heat release are expected.",
+      "examples": ["offices", "churches", "schools", "hospitals", "hotels", "residential"]
+    },
+    {
+      "rule_id": "NFPA-HC-002",
+      "source": "NFPA 13",
+      "section": "3.3.134.4",
+      "hazard_class": "Ordinary Hazard Group 1",
+      "code": "OH1",
+      "color_code": "yellow",
+      "description": "Occupancies or portions where quantity and combustibility of contents does not exceed the amount of miscellaneous storage of Class 2, 3, 4, plastics, tires, and roll paper provided in Table 4.3.1.7.1.",
+      "examples": ["parking garages", "bakeries", "beverage manufacturing", "canneries", "dairy products", "electronic plants", "laundries"]
+    },
+    {
+      "rule_id": "NFPA-HC-003",
+      "source": "NFPA 13",
+      "section": "3.3.134.5",
+      "hazard_class": "Ordinary Hazard Group 2",
+      "code": "OH2",
+      "color_code": "orange",
+      "description": "Occupancies where quantity and combustibility of contents are moderate to high, stockpiles with moderate heat release rates do not exceed 12 ft, and stockpiles with high heat release rates do not exceed 8 ft.",
+      "examples": ["machine shops", "auto showrooms", "chemical plants (low hazard)", "libraries", "wood product assembly", "mercantile storage"],
+      "la_note": "LA default for undetermined-use buildings per LAMC — use OH2 with 3,000 sq ft design area"
+    },
+    {
+      "rule_id": "NFPA-HC-004",
+      "source": "NFPA 13",
+      "section": "3.3.134.1",
+      "hazard_class": "Extra Hazard Group 1",
+      "code": "EH1",
+      "color_code": "red",
+      "description": "Occupancies where quantity and combustibility of contents are very high and dust, lint, or other materials present introduce probability of rapidly developing fires with high rates of heat release but with little or no flammable/combustible liquids.",
+      "examples": ["woodworking", "sawmills", "piers and wharves", "textile mills"]
+    },
+    {
+      "rule_id": "NFPA-HC-005",
+      "source": "NFPA 13",
+      "section": "3.3.134.2",
+      "hazard_class": "Extra Hazard Group 2",
+      "code": "EH2",
+      "color_code": "red",
+      "description": "Occupancies with moderate to substantial amounts of flammable or combustible liquids, or where shielding of combustibles is extensive.",
+      "examples": ["flammable liquid spraying", "open oil quenching", "solvent cleaning", "varnish and paint dipping"]
+    }
+  ],
+
+  "general_spacing_rules": [
+    {
+      "rule_id": "NFPA-GS-001",
+      "source": "NFPA 13",
+      "section": "9.5.2.2.2",
+      "rule_type": "max_coverage_area",
+      "description": "Maximum area of coverage for any single sprinkler shall not exceed 400 sq ft (37 sq m).",
+      "requirement": {
+        "max_coverage_area_sqft": 400,
+        "max_coverage_area_sqm": 37
+      }
+    },
+    {
+      "rule_id": "NFPA-GS-002",
+      "source": "NFPA 13",
+      "section": "9.5.3.2.1",
+      "rule_type": "max_distance_from_wall",
+      "description": "Distance from sprinklers to walls shall not exceed one-half of the allowable maximum distance between sprinklers.",
+      "requirement": {
+        "formula": "max_wall_distance = max_sprinkler_spacing / 2"
+      }
+    },
+    {
+      "rule_id": "NFPA-GS-003",
+      "source": "NFPA 13",
+      "section": "9.5.3.3.1",
+      "rule_type": "min_distance_from_wall",
+      "description": "The minimum distance from a sprinkler to a wall shall comply with the value indicated in the applicable section for each type or style of sprinkler.",
+      "applies_to": "see per-type rules below"
+    },
+    {
+      "rule_id": "NFPA-GS-004",
+      "source": "NFPA 13",
+      "section": "9.5.3.4.1 / 9.5.3.4.2",
+      "rule_type": "min_distance_between_sprinklers",
+      "description": "A minimum distance shall be maintained between sprinklers to prevent operating sprinklers from wetting adjacent sprinklers and to prevent skipping. Value is per sprinkler type.",
+      "applies_to": "see per-type rules below"
+    },
+    {
+      "rule_id": "NFPA-GS-005",
+      "source": "NFPA 13",
+      "section": "9.5.5.3.1",
+      "rule_type": "obstruction_below",
+      "description": "Sprinklers shall be installed under fixed obstructions over 4 ft (1.2 m) in width.",
+      "requirement": {
+        "obstruction_width_threshold_ft": 4,
+        "obstruction_width_threshold_m": 1.2,
+        "action": "install_sprinkler_below"
+      }
+    },
+    {
+      "rule_id": "NFPA-GS-006",
+      "source": "NFPA 13",
+      "section": "9.5.5.3.1.4",
+      "rule_type": "obstruction_deflector_position",
+      "description": "The deflector of automatic sprinklers installed under fixed obstructions shall be positioned no more than 12 in. (300 mm) below the bottom of the obstruction.",
+      "requirement": {
+        "max_deflector_below_obstruction_in": 12,
+        "max_deflector_below_obstruction_mm": 300
+      }
+    },
+    {
+      "rule_id": "NFPA-GS-007",
+      "source": "NFPA 13",
+      "section": "9.5.5.4",
+      "rule_type": "closet_exception",
+      "description": "In all closets not larger than 400 cubic feet, a single sprinkler at the highest ceiling level is sufficient without regard to obstructions or minimum distance to wall.",
+      "requirement": {
+        "max_closet_volume_cuft": 400,
+        "max_closet_volume_cuft_m3": 11,
+        "sprinklers_required": 1,
+        "position": "highest_ceiling_level"
+      }
+    }
+  ],
+
+  "standard_pendent_upright_rules": [
+    {
+      "rule_id": "NFPA-PU-001",
+      "source": "NFPA 13",
+      "section": "10.2.4.2.2",
+      "rule_type": "max_coverage_area",
+      "sprinkler_type": "standard_pendent_upright",
+      "description": "Maximum area of coverage for a standard pendent/upright sprinkler shall not exceed 225 sq ft (20 sq m).",
+      "requirement": {
+        "max_coverage_area_sqft": 225,
+        "max_coverage_area_sqm": 20
+      }
+    },
+    {
+      "rule_id": "NFPA-PU-002",
+      "source": "NFPA 13",
+      "section": "Table 10.2.4.2.1(a)",
+      "rule_type": "max_spacing_by_hazard",
+      "sprinkler_type": "standard_pendent_upright",
+      "hazard_class": "Light Hazard",
+      "description": "Maximum spacing and protection area for standard pendent/upright spray sprinklers in light hazard.",
+      "requirement": {
+        "max_spacing_ft": 15,
+        "max_spacing_m": 4.6,
+        "max_coverage_area_hydraulic_sqft": 225,
+        "max_coverage_area_pipe_schedule_sqft": 200,
+        "note": "Values vary slightly by construction type (combustible/noncombustible, obstructed/unobstructed)"
+      }
+    },
+    {
+      "rule_id": "NFPA-PU-003",
+      "source": "NFPA 13",
+      "section": "Table 10.2.4.2.1(b)",
+      "rule_type": "max_spacing_by_hazard",
+      "sprinkler_type": "standard_pendent_upright",
+      "hazard_class": "Ordinary Hazard",
+      "description": "Maximum spacing and protection area for standard pendent/upright spray sprinklers in ordinary hazard (Group 1 and 2).",
+      "requirement": {
+        "max_spacing_ft": 15,
+        "max_spacing_m": 4.6,
+        "max_coverage_area_sqft": 130,
+        "max_coverage_area_sqm": 12
+      }
+    },
+    {
+      "rule_id": "NFPA-PU-004",
+      "source": "NFPA 13",
+      "section": "Table 10.2.4.2.1(c)",
+      "rule_type": "max_spacing_by_hazard",
+      "sprinkler_type": "standard_pendent_upright",
+      "hazard_class": "Extra Hazard",
+      "description": "Maximum spacing and protection area for standard pendent/upright spray sprinklers in extra hazard.",
+      "requirement": {
+        "max_spacing_pipe_schedule_ft": 12,
+        "max_spacing_hydraulic_high_density_ft": 12,
+        "max_spacing_hydraulic_low_density_ft": 15,
+        "max_coverage_area_pipe_schedule_sqft": 90,
+        "max_coverage_area_hydraulic_high_density_sqft": 100,
+        "max_coverage_area_hydraulic_low_density_sqft": 130,
+        "note": "High density = >= 0.25 gpm/sqft. Bay exception: up to 12 ft 6 in spacing in bays up to 25 ft wide."
+      }
+    },
+    {
+      "rule_id": "NFPA-PU-005",
+      "source": "NFPA 13",
+      "section": "10.2.5.2.1",
+      "rule_type": "max_distance_from_wall",
+      "sprinkler_type": "standard_pendent_upright",
+      "description": "Distance from sprinklers to walls shall not exceed one-half of the allowable distance between sprinklers.",
+      "requirement": {
+        "formula": "max_wall_distance = max_sprinkler_spacing / 2",
+        "light_hazard_max_wall_ft": 7.5,
+        "ordinary_hazard_max_wall_ft": 7.5
+      }
+    },
+    {
+      "rule_id": "NFPA-PU-006",
+      "source": "NFPA 13",
+      "section": "10.2.5.3",
+      "rule_type": "min_distance_from_wall",
+      "sprinkler_type": "standard_pendent_upright",
+      "description": "Sprinklers shall be located a minimum of 4 in. (100 mm) from a wall.",
+      "requirement": {
+        "min_distance_from_wall_in": 4,
+        "min_distance_from_wall_mm": 100
+      }
+    },
+    {
+      "rule_id": "NFPA-PU-007",
+      "source": "NFPA 13",
+      "section": "10.2.5.4.1",
+      "rule_type": "min_distance_between_sprinklers",
+      "sprinkler_type": "standard_pendent_upright",
+      "description": "Sprinklers shall be spaced not less than 6 ft (1.8 m) on center unless baffles are used or in-rack conditions apply.",
+      "requirement": {
+        "min_spacing_ft": 6,
+        "min_spacing_m": 1.8,
+        "exceptions": ["baffles complying with 10.2.5.4.2", "in-rack sprinklers per 10.2.5.4.3"]
+      }
+    },
+    {
+      "rule_id": "NFPA-PU-008",
+      "source": "NFPA 13",
+      "section": "10.2.6.1.1.1",
+      "rule_type": "deflector_position",
+      "sprinkler_type": "standard_pendent_upright",
+      "description": "Under unobstructed construction, the distance between the sprinkler deflector and the ceiling shall be a minimum of 1 in. and maximum of 12 in.",
+      "requirement": {
+        "min_deflector_to_ceiling_in": 1,
+        "min_deflector_to_ceiling_mm": 25,
+        "max_deflector_to_ceiling_in": 12,
+        "max_deflector_to_ceiling_mm": 300
+      }
+    },
+    {
+      "rule_id": "NFPA-PU-009",
+      "source": "NFPA 13",
+      "section": "10.2.8.1",
+      "rule_type": "clearance_to_storage",
+      "sprinkler_type": "standard_pendent_upright",
+      "description": "Clearance between sprinkler deflector and top of storage shall be 18 in. (450 mm) or greater.",
+      "requirement": {
+        "min_clearance_to_storage_in": 18,
+        "min_clearance_to_storage_mm": 450
+      }
+    },
+    {
+      "rule_id": "NFPA-PU-010",
+      "source": "NFPA 13",
+      "section": "10.2.7.2.1.3",
+      "rule_type": "min_distance_from_obstruction",
+      "sprinkler_type": "standard_pendent_upright",
+      "description": "Sprinklers shall be positioned away from obstructions a minimum distance of three times the maximum dimension of the obstruction (e.g., structural members, pipe, columns). Max clear distance required = 24 in. for horizontal obstructions.",
+      "requirement": {
+        "formula": "min_distance = 3 * max_obstruction_dimension",
+        "max_clear_distance_horizontal_in": 24,
+        "max_clear_distance_horizontal_mm": 600,
+        "note": "Max clear distance does not apply to vertical obstructions (columns)"
+      }
+    },
+    {
+      "rule_id": "NFPA-PU-011",
+      "source": "NFPA 13",
+      "section": "Table 10.2.7.1.2",
+      "rule_type": "obstruction_deflector_table",
+      "sprinkler_type": "standard_pendent_upright",
+      "description": "When sprinkler is near an obstruction, the maximum allowable distance of deflector above bottom of obstruction depends on horizontal distance from sprinkler to side of obstruction.",
+      "requirement": {
+        "lookup_table": [
+          {"distance_from_obstruction_ft": "<1", "max_deflector_above_bottom_in": 0},
+          {"distance_from_obstruction_ft": "1 to <1.5", "max_deflector_above_bottom_in": 2.5},
+          {"distance_from_obstruction_ft": "1.5 to <2", "max_deflector_above_bottom_in": 3.5},
+          {"distance_from_obstruction_ft": "2 to <2.5", "max_deflector_above_bottom_in": 5.5},
+          {"distance_from_obstruction_ft": "2.5 to <3", "max_deflector_above_bottom_in": 7.5},
+          {"distance_from_obstruction_ft": "3 to <3.5", "max_deflector_above_bottom_in": 9.5},
+          {"distance_from_obstruction_ft": "3.5 to <4", "max_deflector_above_bottom_in": 12},
+          {"distance_from_obstruction_ft": "4 to <4.5", "max_deflector_above_bottom_in": 14},
+          {"distance_from_obstruction_ft": "4.5 to <5", "max_deflector_above_bottom_in": 16.5},
+          {"distance_from_obstruction_ft": "5 to <5.5", "max_deflector_above_bottom_in": 18},
+          {"distance_from_obstruction_ft": "5.5 to <6", "max_deflector_above_bottom_in": 20},
+          {"distance_from_obstruction_ft": "6 to <6.5", "max_deflector_above_bottom_in": 24},
+          {"distance_from_obstruction_ft": "6.5 to <7", "max_deflector_above_bottom_in": 30},
+          {"distance_from_obstruction_ft": "7 to <7.5", "max_deflector_above_bottom_in": 35}
+        ],
+        "reference_section": "Table 10.2.7.1.2"
+      }
+    }
+  ],
+
+  "sidewall_sprinkler_rules": [
+    {
+      "rule_id": "NFPA-SW-001",
+      "source": "NFPA 13",
+      "section": "10.3.2",
+      "rule_type": "allowed_occupancies",
+      "sprinkler_type": "standard_sidewall",
+      "description": "Sidewall sprinklers may only be installed in specific conditions.",
+      "requirement": {
+        "allowed_conditions": [
+          "Light hazard with smooth, horizontal or sloped, flat ceilings",
+          "Ordinary hazard with smooth, flat ceilings where specifically listed for such use",
+          "To protect areas below overhead doors",
+          "At top and bottom of elevator hoistways",
+          "For protection of steel building columns",
+          "Under obstructions that require sprinklers"
+        ]
+      }
+    },
+    {
+      "rule_id": "NFPA-SW-002",
+      "source": "NFPA 13",
+      "section": "Table 10.3.3.2.1",
+      "rule_type": "max_spacing_by_hazard",
+      "sprinkler_type": "standard_sidewall",
+      "description": "Protection areas and maximum spacing for standard sidewall spray sprinklers.",
+      "requirement": {
+        "light_hazard_combustible_ceiling": {
+          "max_spacing_along_wall_ft": 14,
+          "max_room_width_ft": 12,
+          "max_coverage_area_sqft": 120
+        },
+        "light_hazard_noncombustible_ceiling": {
+          "max_spacing_along_wall_ft": 14,
+          "max_room_width_ft": 14,
+          "max_coverage_area_sqft": 196
+        },
+        "ordinary_hazard_combustible_ceiling": {
+          "max_spacing_along_wall_ft": 10,
+          "max_room_width_ft": 10,
+          "max_coverage_area_sqft": 80
+        },
+        "ordinary_hazard_noncombustible_ceiling": {
+          "max_spacing_along_wall_ft": 10,
+          "max_room_width_ft": 10,
+          "max_coverage_area_sqft": 100
+        }
+      }
+    },
+    {
+      "rule_id": "NFPA-SW-003",
+      "source": "NFPA 13",
+      "section": "10.3.5.1.1.1",
+      "rule_type": "deflector_position",
+      "sprinkler_type": "standard_sidewall",
+      "description": "Sidewall sprinkler deflectors shall be located not more than 6 in. or less than 4 in. from ceilings.",
+      "requirement": {
+        "min_deflector_to_ceiling_in": 4,
+        "min_deflector_to_ceiling_mm": 100,
+        "max_deflector_to_ceiling_in": 6,
+        "max_deflector_to_ceiling_mm": 150
+      }
+    },
+    {
+      "rule_id": "NFPA-SW-004",
+      "source": "NFPA 13",
+      "section": "10.3.4.3.1",
+      "rule_type": "min_distance_from_wall",
+      "sprinkler_type": "standard_sidewall",
+      "description": "Sidewall sprinklers shall be located a minimum of 4 in. (100 mm) from an end wall.",
+      "requirement": {
+        "min_distance_from_end_wall_in": 4,
+        "min_distance_from_end_wall_mm": 100
+      }
+    },
+    {
+      "rule_id": "NFPA-SW-005",
+      "source": "NFPA 13",
+      "section": "10.3.4.4",
+      "rule_type": "min_distance_between_sprinklers",
+      "sprinkler_type": "standard_sidewall",
+      "description": "Sidewall sprinklers shall be spaced not less than 6 ft (1.8 m) on center unless baffles are used.",
+      "requirement": {
+        "min_spacing_ft": 6,
+        "min_spacing_m": 1.8
+      }
+    },
+    {
+      "rule_id": "NFPA-SW-006",
+      "source": "NFPA 13",
+      "section": "10.3.3.2.2",
+      "rule_type": "max_coverage_area",
+      "sprinkler_type": "standard_sidewall",
+      "description": "Maximum area of coverage for a standard sidewall sprinkler shall not exceed 196 sq ft (18 sq m).",
+      "requirement": {
+        "max_coverage_area_sqft": 196,
+        "max_coverage_area_sqm": 18
+      }
+    }
+  ],
+
+  "exempt_spaces": [
+    {
+      "rule_id": "NFPA-EX-001",
+      "source": "NFPA 13",
+      "section": "9.3.16.1",
+      "rule_type": "exempt_space",
+      "space_type": "skylight",
+      "description": "Sprinklers may be omitted from skylights not exceeding 32 sq ft, regardless of hazard, that are separated by at least 10 ft horizontally from any other unprotected skylight or ceiling pocket.",
+      "requirement": {
+        "max_area_sqft": 32,
+        "min_horizontal_separation_ft": 10
+      }
+    },
+    {
+      "rule_id": "NFPA-EX-002",
+      "source": "NFPA 13",
+      "section": "9.2.1",
+      "rule_type": "exempt_space",
+      "space_type": "concealed_noncombustible",
+      "description": "Certain concealed spaces may not require sprinkler protection. Refer to Section 9.2.1.1 through 9.2.1.19 for full list of allowable unsprinklered concealed spaces.",
+      "common_examples": [
+        "noncombustible concealed spaces with noncombustible construction",
+        "spaces in solid joist construction",
+        "small attics"
+      ],
+      "note": "Concealed spaces with exposed combustible construction DO require sprinkler protection per 9.3.17.1"
+    },
+    {
+      "rule_id": "NFPA-EX-003",
+      "source": "NFPA 13",
+      "section": "9.5.5.3.1.5",
+      "rule_type": "exempt_space",
+      "space_type": "obstruction_near_floor",
+      "description": "Sprinklers not required under noncombustible obstructions over 4 ft wide where the bottom of the obstruction is 24 in. or less above the floor or deck.",
+      "requirement": {
+        "obstruction_material": "noncombustible",
+        "min_obstruction_width_ft": 4,
+        "max_obstruction_bottom_height_in": 24
+      }
+    }
+  ],
+
+  "temperature_rating_rules": [
+    {
+      "rule_id": "NFPA-TR-001",
+      "source": "NFPA 13",
+      "section": "9.4.2.1",
+      "rule_type": "temperature_rating",
+      "description": "Unless specific exceptions apply, ordinary- and intermediate-temperature sprinklers shall be used throughout buildings.",
+      "default": "ordinary_temperature"
+    },
+    {
+      "rule_id": "NFPA-TR-002",
+      "source": "NFPA 13",
+      "section": "9.4.2.5",
+      "rule_type": "temperature_rating",
+      "description": "Intermediate-temperature sprinklers required within 12 in. to one side or 30 in. above uncovered steam main, heating coil, or radiator.",
+      "requirement": {
+        "condition": "within_12in_side_or_30in_above_steam_heat_source",
+        "required_rating": "intermediate_temperature"
+      }
+    },
+    {
+      "rule_id": "NFPA-TR-003",
+      "source": "NFPA 13",
+      "section": "9.4.2.5 (item 4)",
+      "rule_type": "temperature_rating",
+      "description": "Sprinklers under glass or plastic skylights exposed to direct rays of the sun shall be of the intermediate-temperature classification.",
+      "requirement": {
+        "condition": "under_skylight_with_direct_sunlight",
+        "required_rating": "intermediate_temperature"
+      }
+    }
+  ]
+}

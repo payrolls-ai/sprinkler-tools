@@ -1,0 +1,180 @@
+{
+  "metadata": {
+    "jurisdiction": "State of California",
+    "code": "California Building Code (CBC)",
+    "edition": "2022 CBC / 2025 Title 24",
+    "relevant_chapters": ["Chapter 9 (Fire Protection Systems)", "Chapter 16 (Structural Design — Seismic)", "Chapter 35 (Adopts NFPA 13 with amendments)"],
+    "extracted_date": "2026-04-17",
+    "sources": [
+      "California DGS — 2025 Title 24 Chapter 4 Special Detailed Requirements",
+      "ASCE 7-22 (seismic design loads, adopted by CBC)",
+      "3smep.com — CBC Seismic Bracing Summary (Dec 2024)",
+      "Sigma7 — Changes in the 2025 Edition of NFPA 13 (Jan 2025)"
+    ],
+    "layer": 2,
+    "layer_description": "State (California) — overrides NFPA 13 base, but is overridden by LAMC (Layer 3) when in conflict",
+    "note": "California adopts NFPA 13 with amendments via CBC Chapter 35. The 2022 CBC is the current adopted edition as of this project. Verify whether LA has adopted the 2025 CBC yet before production use."
+  },
+
+  "amendments": [
+    {
+      "rule_id": "CA-001",
+      "source": "California Building Code",
+      "cbc_section": "Chapter 35 / Chapter 9",
+      "rule_type": "adoption_with_amendments",
+      "description": "California adopts NFPA 13 by reference through CBC Chapter 35, with California-specific amendments. CBC Chapter 9 governs when automatic sprinkler systems are required.",
+      "requirement": {
+        "base_standard": "NFPA 13",
+        "adoption_mechanism": "CBC Chapter 35",
+        "trigger_chapter": "CBC Chapter 9",
+        "action": "All California amendments in this file layer on top of NFPA 13 base rules"
+      },
+      "overrides": null,
+      "ai_impact": "Establishes California as Layer 2. California rules apply everywhere in the state, including LA."
+    },
+    {
+      "rule_id": "CA-002",
+      "source": "California Building Code",
+      "cbc_section": "Chapter 16 / ASCE 7-22",
+      "nfpa_13_chapter": "Chapter 18 (Seismic Protection)",
+      "rule_type": "seismic_bracing_required",
+      "description": "California requires seismic (earthquake) bracing for all fire sprinkler piping. California falls under Seismic Design Categories (SDC) D, E, and F — the highest risk categories — due to active fault zones including the San Andreas and nearby faults in the LA area.",
+      "condition": {
+        "applies_to": "all fire sprinkler systems in California",
+        "seismic_design_categories": ["D", "E", "F"],
+        "la_specific": "Los Angeles area is typically SDC D or higher"
+      },
+      "requirement": {
+        "seismic_bracing_required": true,
+        "component_importance_factor_ip": 1.5,
+        "importance_factor_reason": "Fire sprinklers are life-safety systems — higher Ip means stricter seismic design forces",
+        "bracing_types_required": [
+          "lateral sway bracing",
+          "longitudinal sway bracing",
+          "four-way riser sway bracing",
+          "seismic separation assemblies at building separations",
+          "flexible couplings at connections to allow movement"
+        ],
+        "branch_line_lateral_bracing": {
+          "applies_to_pipe_diameter_in": ">= 2.5",
+          "note": "Branch lines with diameter < 2.5 in. require lateral restraint but not full bracing"
+        },
+        "branch_line_longitudinal_bracing": {
+          "max_spacing_ft": 80,
+          "first_brace_from_horizontal_change_ft": 40
+        },
+        "branch_line_end_restraint": {
+          "max_distance_from_dead_end_ft": 6,
+          "note": "Short hanger or lateral restraint required not more than 6 ft from end of dead-end branch lines"
+        }
+      },
+      "overrides": "NFPA_13_base",
+      "historical_note": "1994 Northridge (LA) earthquake caused widespread sprinkler leakage — lack of longitudinal bracing was the most common failure. This is why seismic bracing is critical in LA.",
+      "ai_impact": "Seismic bracing is a piping/structural issue, not a sprinkler head placement issue. The AI sprinkler head placement model does NOT need to place bracing — but the Phase 8 validator should flag that seismic bracing calculations are required on any LA project."
+    },
+    {
+      "rule_id": "CA-003",
+      "source": "California Building Code",
+      "cbc_section": "Chapter 35 amendment",
+      "rule_type": "hydraulic_design_required",
+      "description": "California incorporated an existing amendment requiring that sprinkler systems be hydraulically designed. Pipe schedule systems are more restricted than under base NFPA 13.",
+      "requirement": {
+        "hydraulic_design_required": true,
+        "note": "Hydraulically calculated systems must meet the density/area design method per NFPA 13."
+      },
+      "overrides": "NFPA_13_base",
+      "ai_impact": "All systems in California are hydraulically calculated. This affects which spacing/coverage area tables apply — always use hydraulically calculated column in NFPA 13 tables."
+    },
+    {
+      "rule_id": "CA-004",
+      "source": "California Building Code",
+      "cbc_section": "Chapter 35 / CBC Section 403",
+      "rule_type": "high_rise_dual_riser",
+      "description": "For high-rise buildings, California requires sprinkler systems to be supplied from two risers to limit the impact of a single-point failure of a standpipe or sprinkler express riser.",
+      "condition": {
+        "applies_to": "high-rise buildings",
+        "height_threshold_ft": 420,
+        "note": "Different requirements apply for buildings > 420 ft vs. buildings < 420 ft"
+      },
+      "requirement": {
+        "minimum_risers": 2,
+        "reason": "Limits single-point failure risk"
+      },
+      "overrides": "NFPA_13_base",
+      "ai_impact": "Riser count is a piping/system design issue, not a sprinkler head placement issue. Not directly relevant to AI head placement model, but relevant to Phase 8 validator for high-rise buildings."
+    },
+    {
+      "rule_id": "CA-005",
+      "source": "California Building Code",
+      "cbc_section": "Chapter 9 (CBC occupancy-based requirements)",
+      "rule_type": "when_sprinklers_required",
+      "description": "California Building Code Chapter 9 expands when automatic sprinkler systems are required beyond the minimum triggers in base NFPA 13 and IBC. California has more aggressive requirements for residential, educational, and assembly occupancies.",
+      "requirement": {
+        "action": "always verify CBC Chapter 9 for occupancy-specific triggers",
+        "common_california_requirements": [
+          "All new Group R (residential) occupancies require NFPA 13 or NFPA 13R systems",
+          "Educational occupancies (Group E) require sprinklers per CBC",
+          "High-rise buildings (> 55 ft) require full NFPA 13 systems",
+          "Underground buildings require NFPA 13 systems"
+        ]
+      },
+      "overrides": "NFPA_13_base",
+      "ai_impact": "Affects which rooms/spaces are marked white (needs sprinklers) vs. gray (exempt) on the color-coded input floor plan. This decision is made upstream by the designer before the AI sees the image."
+    },
+    {
+      "rule_id": "CA-006",
+      "source": "California Building Code / 2025 Title 24",
+      "cbc_section": "Chapter 9 amendment",
+      "rule_type": "vehicle_sallyport",
+      "description": "California adds a requirement that solid roofs in vehicle sallyports shall be fully sprinklered per NFPA 13.",
+      "condition": {
+        "applies_to": "vehicle sallyports with solid roofs"
+      },
+      "requirement": {
+        "fire_barrier_separation": "2-hour fire barrier",
+        "sprinkler_coverage": "full NFPA 13 sprinkler system required under solid roof"
+      },
+      "overrides": "NFPA_13_base",
+      "ai_impact": "If floor plan contains a sallyport space (typically seen in correctional facilities or secure government buildings), it must be treated as requiring sprinklers even if NFPA 13 base might allow omission."
+    },
+    {
+      "rule_id": "CA-007",
+      "source": "California Building Code",
+      "cbc_section": "Chapter 35 (NFPA 13 Chapter 18 seismic update for 2025)",
+      "rule_type": "seismic_design_method_update",
+      "description": "California follows the updated NFPA 13 2025 seismic bracing method, which was overhauled to align with ASCE/SEI 7-22. The seismic coefficient (Cp) values and horizontal force calculation method have been updated. Ground acceleration data is now obtained from the ASCE 7 Hazard Tool online, not printed maps.",
+      "requirement": {
+        "design_spectral_response_method": true,
+        "asce_7_hazard_tool_url": "https://asce7hazardtool.online",
+        "cp_values": "Updated per NFPA 13 2025 Chapter 18 to align with ASCE/SEI 7-22",
+        "load_tables": "Updated to incorporate seismic forces from piping weight",
+        "note": "This is a 2025 edition NFPA 13 change that California adopts through CBC. Verify if 2025 CBC has been adopted in LA."
+      },
+      "overrides": "NFPA_13_2019_seismic_method",
+      "ai_impact": "Engineering/calculation item only. Does not affect AI sprinkler head placement."
+    }
+  ],
+
+  "seismic_quick_reference": {
+    "description": "Key seismic facts for LA-area sprinkler projects",
+    "la_seismic_design_category": "D (minimum) — verify per project address using ASCE 7 Hazard Tool",
+    "importance_factor_ip": 1.5,
+    "key_bracing_rules": {
+      "lateral_brace_max_spacing_ft": 40,
+      "longitudinal_brace_max_spacing_ft": 80,
+      "first_longitudinal_brace_from_riser_ft": 40,
+      "dead_end_branch_line_restraint_ft": 6,
+      "pipe_diameter_requiring_full_lateral_brace_in": 2.5
+    },
+    "northridge_lesson": "1994 Northridge earthquake showed that lack of longitudinal bracing was the #1 cause of sprinkler pipe failure. All LA projects must treat seismic bracing as non-negotiable."
+  },
+
+  "layer_override_summary": {
+    "description": "California rules sit above NFPA 13 base but below LAMC. Here are the most important overrides.",
+    "key_overrides_vs_nfpa13": [
+      "Seismic bracing required statewide (NFPA 13 only requires when called for by building code — California always calls for it)",
+      "Hydraulic design required for all systems (NFPA 13 still allows pipe schedule in some cases)",
+      "Ip = 1.5 for all fire sprinkler systems (higher seismic design forces than base NFPA 13)"
+    ]
+  }
+}

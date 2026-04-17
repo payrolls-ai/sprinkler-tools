@@ -1,0 +1,156 @@
+{
+  "metadata": {
+    "jurisdiction": "City of Los Angeles",
+    "code": "LAMC",
+    "chapter": "Division 20, Fire Protection Systems",
+    "section": "94.2010.0",
+    "base_standard_adopted": "NFPA 13 via 2022 California Building Code Chapter 35",
+    "extracted_date": "2026-04-17",
+    "source": "codelibrary.amlegal.com — LAMC 2026 Rev. 7 (current)",
+    "layer": 3,
+    "layer_description": "Local (LA-specific) — overrides both NFPA 13 base and California state amendments when in conflict",
+    "note": "Always verify against current LAMC as amendments may be updated. Delays of up to 3 months between legislation and posting at amlegal.com."
+  },
+
+  "amendments": [
+    {
+      "rule_id": "LA-001",
+      "source": "LAMC",
+      "lamc_section": "94.2010.1",
+      "rule_type": "adoption_reference",
+      "description": "LA adopts Chapter 35 of the 2022 California Building Code (which itself adopts and amends NFPA 13). Sprinkler provisions in CBC Chapters 4 and 9 also apply.",
+      "requirement": {
+        "adopted_standard": "2022 CBC Chapter 35 (adopts and amends NFPA 13)",
+        "additional_chapters": ["2022 CBC Chapter 4", "2022 CBC Chapter 9"],
+        "action": "comply_with_all"
+      },
+      "overrides": null,
+      "ai_impact": "Layer 3 starts here. All LAMC rules below sit on top of CBC Chapter 35 which sits on top of NFPA 13."
+    },
+    {
+      "rule_id": "LA-002",
+      "source": "LAMC",
+      "lamc_section": "94.2010.2",
+      "nfpa_section_added": "3.3.243",
+      "rule_type": "definition",
+      "description": "LA adds the definition of 'Water Curtain' which does not exist in base NFPA 13.",
+      "requirement": {
+        "term": "Water Curtain",
+        "definition": "A line of closely spaced fire sprinklers (or a single sprinkler) aligned adjacent to openings to keep fire from penetrating those openings."
+      },
+      "overrides": "NFPA_13_base",
+      "ai_impact": "When AI detects an opening requiring fire separation on the floor plan, it must apply water curtain rules (see LA-003)."
+    },
+    {
+      "rule_id": "LA-003",
+      "source": "LAMC",
+      "lamc_section": "94.2010.3",
+      "nfpa_section_added": "9.3.5.5",
+      "rule_type": "water_curtain_spacing",
+      "description": "Water curtains shall consist of closely spaced sprinklers and noncombustible/limited-combustible draft stops. Specific spacing and placement rules apply.",
+      "condition": {
+        "applies_to": "openings requiring fire separation (water curtain installations)"
+      },
+      "requirement": {
+        "draft_stop_material": ["noncombustible", "limited_combustible"],
+        "max_sprinkler_spacing_ft": 6,
+        "max_sprinkler_spacing_mm": 1828.8,
+        "sprinkler_placement_from_draft_stop_in": {"min": 6, "max": 12},
+        "sprinkler_placement_from_draft_stop_mm": {"min": 152.4, "max": 304.8},
+        "sprinkler_side": "away from the opening",
+        "cross_baffles_required_when": "sprinklers are closer than 6 ft (1828.8 mm) apart",
+        "cross_baffles_standard": "NFPA 13 Section 10.2.5.4.2"
+      },
+      "overrides": "NFPA_13_base",
+      "ai_impact": "When placing sprinklers at a fire-separation opening, max 6 ft apart, 6–12 inches from draft stop, on the side away from the opening."
+    },
+    {
+      "rule_id": "LA-004",
+      "source": "LAMC",
+      "lamc_section": "94.2010.4",
+      "nfpa_section_added": "16.9.10.5",
+      "rule_type": "floor_control_valve_location",
+      "description": "Floor control valves must be in specific locations. LA adds stricter placement requirements not in base NFPA 13.",
+      "requirement": {
+        "required_locations": [
+          "within a stairway enclosure",
+          "within the vestibule of a smokeproof enclosure",
+          "on the access balcony of a smokeproof enclosure"
+        ],
+        "exception": {
+          "condition": "buildings with 3 or fewer stories OR where there is no stairway that serves the floor",
+          "allowed_location": "elsewhere on the floor level"
+        }
+      },
+      "overrides": "NFPA_13_base",
+      "ai_impact": "Floor plan validator should flag floor control valve placement. For AI sprinkler head placement (Phase 5–7), this is less directly relevant — but important for Phase 8 validator."
+    },
+    {
+      "rule_id": "LA-005",
+      "source": "LAMC",
+      "lamc_section": "94.2010.0 (undetermined use provision)",
+      "nfpa_section_modified": "hazard classification default",
+      "rule_type": "undetermined_use_default",
+      "description": "When fire sprinkler systems are required in buildings of undetermined use, LA mandates a minimum hazard classification and design area more conservative than the NFPA 13 base standard.",
+      "condition": {
+        "applies_to": "buildings where use/occupancy is not specified at time of permit",
+        "trigger": "use_is_undetermined"
+      },
+      "requirement": {
+        "minimum_hazard_class": "Ordinary Hazard Group 2",
+        "minimum_hazard_code": "OH2",
+        "minimum_design_area_sqft": 3000,
+        "color_code_on_floor_plan": "orange"
+      },
+      "overrides": "NFPA_13_base",
+      "ai_impact": "If floor plan room color = orange (OH2) AND use is undetermined, apply 3,000 sq ft minimum design area for hydraulic calculations. This is the LA default for most shell buildings."
+    },
+    {
+      "rule_id": "LA-006",
+      "source": "LAMC",
+      "lamc_section": "94.2010.1 (via 2022 CBC Chapter 9)",
+      "rule_type": "cbc_chapter_9_compliance",
+      "description": "Sprinkler provisions in CBC Chapter 9 apply in addition to NFPA 13. CBC Chapter 9 governs when sprinkler systems are required in various occupancy types.",
+      "requirement": {
+        "action": "comply_with_cbc_chapter_9_when_required",
+        "note": "CBC Chapter 9 determines when a sprinkler system is required. LAMC 94.2010 governs how it is installed once required."
+      },
+      "overrides": null,
+      "ai_impact": "Determines which rooms/floors need sprinklers at all. The AI's color-coded input layer (white = needs sprinklers, gray = exempt) encodes this upstream of the AI model."
+    }
+  ],
+
+  "layer_override_summary": {
+    "description": "When a conflict exists between rules, LAMC wins. Below is the hierarchy for the most common conflict scenarios.",
+    "conflicts": [
+      {
+        "topic": "Hazard class for unknown-use room",
+        "nfpa_13_says": "Engineer determines hazard class",
+        "california_says": "No change to this",
+        "lamc_says": "Minimum OH2 + 3,000 sqft design area",
+        "winner": "LAMC"
+      },
+      {
+        "topic": "Water curtain spacing at fire-separation openings",
+        "nfpa_13_says": "No specific water curtain definition or rule",
+        "california_says": "No change to this",
+        "lamc_says": "Max 6 ft apart, 6–12 in from draft stop",
+        "winner": "LAMC"
+      },
+      {
+        "topic": "Floor control valve location",
+        "nfpa_13_says": "General valve requirements",
+        "california_says": "No change to this",
+        "lamc_says": "Must be in stair enclosure or smokeproof vestibule (with 3-story exception)",
+        "winner": "LAMC"
+      },
+      {
+        "topic": "Seismic bracing of pipes",
+        "nfpa_13_says": "Seismic bracing per Chapter 18 (updated in 2025 edition)",
+        "california_says": "California Seismic Design Category D/E/F, Ip = 1.5 for life-safety systems",
+        "lamc_says": "Follows CBC Chapter 35 which incorporates California seismic amendments",
+        "winner": "California amendment (enforced through LAMC adoption of CBC)"
+      }
+    ]
+  }
+}
