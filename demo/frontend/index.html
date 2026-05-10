@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sprinkler Tools · LA Jurisdiction Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+      <circle cx="16" cy="16" r="3" fill="#c9302c"/>
+      <g stroke="#c9302c" stroke-width="1.5" stroke-linecap="round">
+        <line x1="16" y1="2"  x2="16" y2="9"/>
+        <line x1="16" y1="23" x2="16" y2="30"/>
+        <line x1="2"  y1="16" x2="9"  y2="16"/>
+        <line x1="23" y1="16" x2="30" y2="16"/>
+        <line x1="6.5"  y1="6.5"  x2="11.5" y2="11.5"/>
+        <line x1="20.5" y1="20.5" x2="25.5" y2="25.5"/>
+        <line x1="25.5" y1="6.5"  x2="20.5" y2="11.5"/>
+        <line x1="11.5" y1="20.5" x2="6.5"  y2="25.5"/>
+      </g>
+    </svg>
+    <div class="brand-text">
+      <h1>Sprinkler Tools</h1>
+      <span class="tagline">CNN + 50-Agent Placement · Los Angeles</span>
+    </div>
+  </div>
+  <div class="status">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">Ready</span>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- LEFT: agent roster -->
+  <aside class="panel agents-panel">
+    <header class="panel-header">
+      <h2>Specialist Agents</h2>
+      <span class="badge" id="agent-count">50</span>
+    </header>
+    <div class="teams" id="teams"></div>
+  </aside>
+
+  <!-- CENTER: blueprint canvas -->
+  <section class="canvas-area">
+    <div class="canvas-header">
+      <div>
+        <h2 class="canvas-title">DEMO-LA-001 · 60 ft × 40 ft</h2>
+        <p class="canvas-subtitle">8 rooms · undetermined-use commercial floor plan</p>
+      </div>
+      <div class="canvas-actions">
+        <button class="btn-secondary" id="btn-reset">Reset</button>
+        <button class="btn-primary" id="btn-analyze">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Run AI Analysis
+        </button>
+      </div>
+    </div>
+    <div class="canvas-wrap">
+      <svg id="blueprint" viewBox="-2 -2 64 44" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <pattern id="grid" width="2" height="2" patternUnits="userSpaceOnUse">
+            <path d="M 2 0 L 0 0 0 2" fill="none" stroke="rgba(40,80,120,0.15)" stroke-width="0.04"/>
+          </pattern>
+          <pattern id="grid-major" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(40,80,120,0.32)" stroke-width="0.08"/>
+          </pattern>
+          <radialGradient id="sprinkler-glow">
+            <stop offset="0%" stop-color="#c9302c" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#c9302c" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="paper-grain">
+            <feTurbulence type="fractalNoise" baseFrequency="2.5" numOctaves="2" seed="3"/>
+            <feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.5  0 0 0 0 0.4  0 0 0 0.05 0"/>
+          </filter>
+        </defs>
+
+        <!-- Paper background -->
+        <rect x="-2" y="-2" width="64" height="44" fill="#f0eadb"/>
+        <rect x="-2" y="-2" width="64" height="44" fill="url(#grid)"/>
+        <rect x="-2" y="-2" width="64" height="44" fill="url(#grid-major)"/>
+        <rect x="-2" y="-2" width="64" height="44" filter="url(#paper-grain)" opacity="0.4"/>
+
+        <!-- Border -->
+        <rect x="0" y="0" width="60" height="40" fill="none" stroke="#1f3a5f" stroke-width="0.18"/>
+
+        <!-- Title block -->
+        <g transform="translate(40, 41)" class="title-block">
+          <text x="0" y="0" font-family="JetBrains Mono" font-size="0.7" fill="#1f3a5f">SCALE 1/8" = 1'-0"</text>
+          <text x="12" y="0" font-family="JetBrains Mono" font-size="0.7" fill="#1f3a5f">DWG: DEMO-LA-001</text>
+        </g>
+        <g transform="translate(0, 41)" class="title-block">
+          <text x="0" y="0" font-family="JetBrains Mono" font-size="0.7" fill="#1f3a5f">N ↑   60'-0" × 40'-0"</text>
+        </g>
+
+        <!-- Layers (populated by JS) -->
+        <g id="layer-rooms"></g>
+        <g id="layer-walls"></g>
+        <g id="layer-features"></g>
+        <g id="layer-scan"></g>
+        <g id="layer-sprinklers"></g>
+        <g id="layer-labels"></g>
+      </svg>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend-item"><span class="swatch" style="background:#fff7c4;border:1px solid #d3b85a"></span> Light Hazard</div>
+        <div class="legend-item"><span class="swatch" style="background:#ffd9a8;border:1px solid #c47a2e"></span> Ordinary Hazard</div>
+        <div class="legend-item"><span class="swatch" style="background:#dde0d8;border:1px solid #8a8a8a"></span> Exempt / Electrical</div>
+        <div class="legend-item"><span class="swatch dot"></span> Sprinkler Head</div>
+        <div class="legend-item"><span class="swatch" style="background:rgba(201,48,44,0.2);border:1.5px dashed #c9302c"></span> Water Curtain</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: findings + compliance -->
+  <aside class="panel findings-panel">
+    <header class="panel-header">
+      <h2>Live Findings</h2>
+      <span class="badge" id="finding-count">0</span>
+    </header>
+    <div id="findings-stream" class="findings-stream">
+      <div class="empty-state">
+        <p>Click <strong>Run AI Analysis</strong> to start.</p>
+        <p class="muted">Findings will stream in here as the 50 agents inspect the blueprint.</p>
+      </div>
+    </div>
+
+    <header class="panel-header" style="margin-top: 1.5rem">
+      <h2>Code Compliance</h2>
+    </header>
+    <div id="compliance-list" class="compliance-list"></div>
+
+    <header class="panel-header" style="margin-top: 1.5rem">
+      <h2>Rule Hierarchy</h2>
+    </header>
+    <div class="rule-hierarchy">
+      <div class="rule-layer rule-lamc"><strong>LAMC § 94.2010</strong><span>5 rules · top priority</span></div>
+      <div class="rule-layer rule-ca"><strong>California amendments</strong><span>3 rules · state overrides</span></div>
+      <div class="rule-layer rule-nfpa"><strong>NFPA 13 (2025)</strong><span>10 rules · base standard</span></div>
+    </div>
+
+    <div class="run-stats" id="run-stats"></div>
+  </aside>
+
+</main>
+
+<footer class="footer">
+  <span>Sprinkler Tools v0.1.0 · Phase 5 Proof of Concept</span>
+  <span id="run-time">—</span>
+</footer>
+
+<!-- Sprinkler tooltip -->
+<div id="tooltip" class="tooltip" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

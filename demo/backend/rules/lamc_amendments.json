@@ -1,0 +1,105 @@
+{
+  "$schema": "../models/rule_schema.json",
+  "code": "Los Angeles Municipal Code",
+  "section_root": "94.2010.0",
+  "publisher": "City of Los Angeles",
+  "layer": 3,
+  "rules": [
+    {
+      "rule_id": "LA-001",
+      "source": "LAMC",
+      "section": "94.2010.4",
+      "nfpa_section_modified": "16.9.6",
+      "rule_type": "floor_control_valve",
+      "ai_impact": "validator",
+      "condition": {
+        "applies_to": "all floors of buildings 4 stories or taller"
+      },
+      "requirement": {
+        "valve_location": "inside stairway enclosure or smokeproof enclosure vestibule",
+        "exception_applies_to": "buildings 3 stories or fewer",
+        "exception_allows": "valves placed elsewhere on the floor"
+      },
+      "overrides": null,
+      "adds_to": "NFPA13",
+      "code_edition": "2022_CBC",
+      "effective_date": "2023-01-01",
+      "human_summary": "LA: floor control valves go inside the stairway/smokeproof enclosure on each floor (exception: buildings ≤3 stories)."
+    },
+    {
+      "rule_id": "LA-002",
+      "source": "LAMC",
+      "section": "94.2010.2",
+      "rule_type": "definition",
+      "ai_impact": "placement",
+      "condition": {
+        "applies_to": "the definition of a water curtain in LA jurisdiction"
+      },
+      "requirement": {
+        "definition": "A line of closely spaced sprinklers at a fire-separation opening, working with a draft stop to keep fire on one side."
+      },
+      "code_edition": "2022_CBC",
+      "effective_date": "2023-01-01",
+      "human_summary": "LA defines a water curtain: a row of sprinklers at an opening that, paired with a draft stop, keeps fire from spreading."
+    },
+    {
+      "rule_id": "LA-003",
+      "source": "LAMC",
+      "section": "94.2010.3",
+      "nfpa_section_modified": "9.3.5.5",
+      "rule_type": "water_curtain",
+      "ai_impact": "both",
+      "condition": {
+        "applies_to": "openings requiring fire separation in LA jurisdiction"
+      },
+      "requirement": {
+        "max_sprinkler_spacing_along_opening_ft": 6,
+        "distance_from_draft_stop_in": {"min": 6, "max": 12},
+        "draft_stop_depth_in": {"min": 18},
+        "draft_stop_material": "noncombustible"
+      },
+      "overrides": null,
+      "adds_to": "NFPA13",
+      "code_edition": "2022_CBC",
+      "effective_date": "2023-01-01",
+      "human_summary": "LA water curtains: sprinklers max 6 ft apart along the opening, 6-12 in from a noncombustible draft stop ≥18 in deep."
+    },
+    {
+      "rule_id": "LA-004",
+      "source": "LAMC",
+      "section": "94.2010.5",
+      "rule_type": "undetermined_use",
+      "ai_impact": "both",
+      "condition": {
+        "applies_to": "buildings with no determined use at time of sprinkler design"
+      },
+      "requirement": {
+        "min_hazard_class": "Ordinary Hazard Group 2",
+        "min_design_area_sqft": 3000,
+        "min_density_gpm_per_sqft": 0.20
+      },
+      "overrides": "NFPA-008",
+      "code_edition": "2022_CBC",
+      "effective_date": "2023-01-01",
+      "human_summary": "LA: if the building's use is not yet known, design for at least Ordinary Hazard Group 2 over 3000 sqft."
+    },
+    {
+      "rule_id": "LA-005",
+      "source": "LAMC",
+      "section": "94.2010.6",
+      "rule_type": "high_rise",
+      "ai_impact": "validator",
+      "condition": {
+        "applies_to": "high-rise buildings (>75 ft above lowest fire dept. access)"
+      },
+      "requirement": {
+        "redundant_water_supply_required": true,
+        "min_pressure_at_topmost_sprinkler_psi": 15,
+        "min_flow_at_topmost_sprinkler_gpm": 500
+      },
+      "code_edition": "2022_CBC",
+      "effective_date": "2023-01-01",
+      "human_summary": "LA high-rise (>75 ft): redundant water supply required, min 15 psi and 500 gpm at the topmost sprinkler."
+    }
+  ]
+}

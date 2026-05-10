@@ -1,0 +1,74 @@
+{
+  "$schema": "../models/rule_schema.json",
+  "code": "California Building Code",
+  "edition": "2022_CBC",
+  "publisher": "California Building Standards Commission",
+  "layer": 2,
+  "rules": [
+    {
+      "rule_id": "CA-001",
+      "source": "California",
+      "section": "CBC 9.3.5",
+      "nfpa_section_modified": "18.5",
+      "rule_type": "seismic",
+      "ai_impact": "validator",
+      "condition": {
+        "applies_to": "all sprinkler systems in California",
+        "seismic_design_category": ["C", "D", "E", "F"]
+      },
+      "requirement": {
+        "lateral_bracing_required": true,
+        "longitudinal_bracing_required": true,
+        "max_distance_between_lateral_braces_ft": 40,
+        "max_distance_between_longitudinal_braces_ft": 80,
+        "flexible_couplings_required_at": ["risers", "branch_drops", "wall_penetrations"]
+      },
+      "overrides": null,
+      "adds_to": "NFPA13",
+      "code_edition": "2022_CBC",
+      "effective_date": "2023-01-01",
+      "human_summary": "California requires earthquake bracing on all sprinkler piping: lateral every 40 ft, longitudinal every 80 ft, flexible couplings at risers and wall penetrations."
+    },
+    {
+      "rule_id": "CA-002",
+      "source": "California",
+      "section": "CBC 903.3.1.1.1",
+      "nfpa_section_modified": "8.5.2",
+      "rule_type": "exempt_space_override",
+      "ai_impact": "placement",
+      "condition": {
+        "applies_to": "small bathrooms in residential occupancies",
+        "occupancy_groups": ["R-1", "R-2"],
+        "max_area_sqft": 55
+      },
+      "requirement": {
+        "sprinkler_required": false,
+        "construction_required": "non-combustible or limited-combustible"
+      },
+      "overrides": "NFPA-007",
+      "code_edition": "2022_CBC",
+      "effective_date": "2023-01-01",
+      "human_summary": "California: bathrooms ≤55 sqft in R-1/R-2 occupancies may be exempt from sprinklers if non-combustible."
+    },
+    {
+      "rule_id": "CA-003",
+      "source": "California",
+      "section": "CBC 903.3.5",
+      "rule_type": "water_supply",
+      "ai_impact": "validator",
+      "condition": {
+        "applies_to": "all new sprinkler systems"
+      },
+      "requirement": {
+        "min_supply_duration_minutes": {
+          "Light": 30,
+          "Ordinary": 60,
+          "Extra": 90
+        }
+      },
+      "code_edition": "2022_CBC",
+      "effective_date": "2023-01-01",
+      "human_summary": "California minimum water supply duration: Light 30 min, Ordinary 60 min, Extra 90 min."
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "$schema": "../models/rule_schema.json",
+  "code": "NFPA 13",
+  "edition": "2025",
+  "publisher": "National Fire Protection Association",
+  "layer": 1,
+  "rules": [
+    {
+      "rule_id": "NFPA-001",
+      "source": "NFPA13",
+      "section": "8.6.2.2.1",
+      "rule_type": "spacing",
+      "ai_impact": "both",
+      "condition": {
+        "applies_to": "Light Hazard occupancy with smooth ceiling",
+        "ceiling_type": "smooth",
+        "hazard_class": "Light"
+      },
+      "requirement": {
+        "max_spacing_ft": 15,
+        "max_distance_to_wall_ft": 7.5,
+        "max_protected_area_per_sprinkler_sqft": 225
+      },
+      "code_edition": "NFPA13_2025",
+      "human_summary": "Light Hazard with smooth ceiling: sprinklers max 15 ft apart, max 7.5 ft from a wall, max 225 sq ft each."
+    },
+    {
+      "rule_id": "NFPA-002",
+      "source": "NFPA13",
+      "section": "8.6.2.2.2",
+      "rule_type": "spacing",
+      "ai_impact": "both",
+      "condition": {
+        "applies_to": "Ordinary Hazard occupancy with smooth ceiling",
+        "ceiling_type": "smooth",
+        "hazard_class": "Ordinary"
+      },
+      "requirement": {
+        "max_spacing_ft": 15,
+        "max_distance_to_wall_ft": 7.5,
+        "max_protected_area_per_sprinkler_sqft": 130
+      },
+      "code_edition": "NFPA13_2025",
+      "human_summary": "Ordinary Hazard with smooth ceiling: sprinklers max 15 ft apart, max 7.5 ft from a wall, max 130 sq ft each."
+    },
+    {
+      "rule_id": "NFPA-003",
+      "source": "NFPA13",
+      "section": "8.6.2.2.3",
+      "rule_type": "spacing",
+      "ai_impact": "both",
+      "condition": {
+        "applies_to": "Extra Hazard occupancy with smooth ceiling",
+        "ceiling_type": "smooth",
+        "hazard_class": "Extra"
+      },
+      "requirement": {
+        "max_spacing_ft": 12,
+        "max_distance_to_wall_ft": 6,
+        "max_protected_area_per_sprinkler_sqft": 100
+      },
+      "code_edition": "NFPA13_2025",
+      "human_summary": "Extra Hazard with smooth ceiling: sprinklers max 12 ft apart, max 6 ft from a wall, max 100 sq ft each."
+    },
+    {
+      "rule_id": "NFPA-004",
+      "source": "NFPA13",
+      "section": "8.6.5.1.2",
+      "rule_type": "min_spacing",
+      "ai_impact": "placement",
+      "condition": {
+        "applies_to": "any two adjacent sprinklers"
+      },
+      "requirement": {
+        "min_spacing_ft": 6
+      },
+      "code_edition": "NFPA13_2025",
+      "human_summary": "Two sprinklers must never be closer than 6 ft (prevents cold-soldering of adjacent heads)."
+    },
+    {
+      "rule_id": "NFPA-005",
+      "source": "NFPA13",
+      "section": "9.5.5.3",
+      "rule_type": "obstruction",
+      "ai_impact": "placement",
+      "condition": {
+        "applies_to": "any continuous obstruction wider than 4 inches",
+        "obstruction_types": ["hvac_duct", "deep_beam", "soffit", "cable_tray"]
+      },
+      "requirement": {
+        "min_distance_from_obstruction_in": 12,
+        "rule_known_as": "Three Times the Obstruction Width Rule",
+        "formula": "min_distance = 3 * obstruction_width, capped at 24 in"
+      },
+      "code_edition": "NFPA13_2025",
+      "human_summary": "Sprinklers must clear obstructions wider than 4 in by 3× their width (max 24 in)."
+    },
+    {
+      "rule_id": "NFPA-006",
+      "source": "NFPA13",
+      "section": "9.5.4.1",
+      "rule_type": "obstruction",
+      "ai_impact": "placement",
+      "condition": {
+        "applies_to": "obstructions hanging below ceiling",
+        "obstruction_height_below_ceiling_in": {"min": 4}
+      },
+      "requirement": {
+        "additional_sprinklers_required": "if obstruction creates a shadow zone larger than 4 sqft"
+      },
+      "code_edition": "NFPA13_2025",
+      "human_summary": "If an obstruction below the ceiling creates a >4 sqft water shadow, add sprinklers under it."
+    },
+    {
+      "rule_id": "NFPA-007",
+      "source": "NFPA13",
+      "section": "8.5.2.1",
+      "rule_type": "exempt_space",
+      "ai_impact": "placement",
+      "condition": {
+        "applies_to": "small concealed spaces",
+        "space_types": ["closet", "small_shaft"],
+        "max_area_sqft": 24
+      },
+      "requirement": {
+        "sprinkler_required": false,
+        "exception_note": "Closets ≤ 24 sqft with non-combustible storage may be exempt; verify per AHJ."
+      },
+      "code_edition": "NFPA13_2025",
+      "human_summary": "Closets and small shafts ≤ 24 sqft may be exempt from sprinklers (verify with AHJ)."
+    },
+    {
+      "rule_id": "NFPA-008",
+      "source": "NFPA13",
+      "section": "16.2.4.2",
+      "rule_type": "design_density",
+      "ai_impact": "validator",
+      "condition": {
+        "applies_to": "Light Hazard occupancy"
+      },
+      "requirement": {
+        "min_density_gpm_per_sqft": 0.10,
+        "design_area_sqft": 1500
+      },
+      "code_edition": "NFPA13_2025",
+      "human_summary": "Light Hazard hydraulic design: 0.10 gpm/sqft over 1500 sqft."
+    },
+    {
+      "rule_id": "NFPA-009",
+      "source": "NFPA13",
+      "section": "16.2.4.3",
+      "rule_type": "design_density",
+      "ai_impact": "validator",
+      "condition": {
+        "applies_to": "Ordinary Hazard Group 1"
+      },
+      "requirement": {
+        "min_density_gpm_per_sqft": 0.15,
+        "design_area_sqft": 1500
+      },
+      "code_edition": "NFPA13_2025",
+      "human_summary": "Ordinary Hazard Group 1 hydraulic design: 0.15 gpm/sqft over 1500 sqft."
+    },
+    {
+      "rule_id": "NFPA-010",
+      "source": "NFPA13",
+      "section": "16.2.4.4",
+      "rule_type": "design_density",
+      "ai_impact": "validator",
+      "condition": {
+        "applies_to": "Ordinary Hazard Group 2"
+      },
+      "requirement": {
+        "min_density_gpm_per_sqft": 0.20,
+        "design_area_sqft": 1500
+      },
+      "code_edition": "NFPA13_2025",
+      "human_summary": "Ordinary Hazard Group 2 hydraulic design: 0.20 gpm/sqft over 1500 sqft."
+    }
+  ]
+}
