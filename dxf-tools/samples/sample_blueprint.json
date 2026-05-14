@@ -1,0 +1,1439 @@
+{
+  "source_file": "/home/claude/dxf-tools/samples/sample_blueprint.dxf",
+  "dxf_version": "AC1032",
+  "units": "inches",
+  "scale_factor": 0.08333333333333333,
+  "dimensions": {
+    "width_drawing_units": 720.0,
+    "height_drawing_units": 540.0,
+    "width_ft": 60.0,
+    "height_ft": 45.0
+  },
+  "metadata": {
+    "dxf_handles_seen": 88,
+    "min_x": 0.0,
+    "min_y": -60.0,
+    "max_x": 720.0,
+    "max_y": 480.0
+  },
+  "total_entities": 88,
+  "layers": {
+    "0": {
+      "aia_category": "ANNOTATION",
+      "color": 7,
+      "description": "",
+      "entity_count": 0,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "Defpoints": {
+      "aia_category": "ANNOTATION",
+      "color": 7,
+      "description": "",
+      "entity_count": 0,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "A-WALL": {
+      "aia_category": "ARCHITECTURAL",
+      "color": 7,
+      "description": "Architectural \u2014 exterior walls",
+      "entity_count": 9,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "A-WALL-PRHT": {
+      "aia_category": "ARCHITECTURAL",
+      "color": 8,
+      "description": "Architectural \u2014 partition walls",
+      "entity_count": 7,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "A-DOOR": {
+      "aia_category": "ARCHITECTURAL",
+      "color": 5,
+      "description": "Architectural \u2014 doors",
+      "entity_count": 7,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "A-GLAZ": {
+      "aia_category": "ARCHITECTURAL",
+      "color": 4,
+      "description": "Architectural \u2014 windows",
+      "entity_count": 0,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "S-COLS": {
+      "aia_category": "STRUCTURAL",
+      "color": 6,
+      "description": "Structural \u2014 columns",
+      "entity_count": 3,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "S-BEAM": {
+      "aia_category": "STRUCTURAL",
+      "color": 9,
+      "description": "Structural \u2014 beams",
+      "entity_count": 2,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "M-HVAC-DUCT": {
+      "aia_category": "MECHANICAL",
+      "color": 30,
+      "description": "Mechanical \u2014 HVAC ducts",
+      "entity_count": 4,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "E-LITE": {
+      "aia_category": "ELECTRICAL",
+      "color": 2,
+      "description": "Electrical \u2014 light fixtures",
+      "entity_count": 0,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "FP-SPRK": {
+      "aia_category": "FIRE_PROTECTION",
+      "color": 1,
+      "description": "Fire protection \u2014 sprinkler heads",
+      "entity_count": 32,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "FP-PIPE": {
+      "aia_category": "FIRE_PROTECTION",
+      "color": 3,
+      "description": "Fire protection \u2014 pipes",
+      "entity_count": 0,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "FP-RISR": {
+      "aia_category": "FIRE_PROTECTION",
+      "color": 13,
+      "description": "Fire protection \u2014 main riser",
+      "entity_count": 2,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "FP-NOTE": {
+      "aia_category": "FIRE_PROTECTION",
+      "color": 250,
+      "description": "Fire protection \u2014 annotations",
+      "entity_count": 17,
+      "is_visible": true,
+      "is_locked": false
+    },
+    "TITLEBLOCK": {
+      "aia_category": "ANNOTATION",
+      "color": 7,
+      "description": "Title block / drawing info",
+      "entity_count": 5,
+      "is_visible": true,
+      "is_locked": false
+    }
+  },
+  "entities_by_layer": {
+    "A-WALL": [
+      {
+        "dxf_type": "LWPOLYLINE",
+        "layer": "A-WALL",
+        "handle": "98",
+        "points": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            720.0,
+            0.0
+          ],
+          [
+            720.0,
+            480.0
+          ],
+          [
+            0.0,
+            480.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "is_closed": true
+        }
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "A-WALL",
+        "handle": "E3",
+        "start": [
+          180.0,
+          130.0
+        ],
+        "text": "OFFICE 101",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "A-WALL",
+        "handle": "E4",
+        "start": [
+          180.0,
+          360.0
+        ],
+        "text": "OFFICE 102",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "A-WALL",
+        "handle": "E5",
+        "start": [
+          450.0,
+          72.0
+        ],
+        "text": "CONFERENCE",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "A-WALL",
+        "handle": "E6",
+        "start": [
+          630.0,
+          72.0
+        ],
+        "text": "KITCHEN",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "A-WALL",
+        "handle": "E7",
+        "start": [
+          450.0,
+          216.0
+        ],
+        "text": "BATH",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "A-WALL",
+        "handle": "E8",
+        "start": [
+          570.0,
+          216.0
+        ],
+        "text": "ELEC",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "A-WALL",
+        "handle": "E9",
+        "start": [
+          660.0,
+          216.0
+        ],
+        "text": "STAIR",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "A-WALL",
+        "handle": "EA",
+        "start": [
+          540.0,
+          384.0
+        ],
+        "text": "WAREHOUSE",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      }
+    ],
+    "A-WALL-PRHT": [
+      {
+        "dxf_type": "LINE",
+        "layer": "A-WALL-PRHT",
+        "handle": "99",
+        "start": [
+          360.0,
+          0.0
+        ],
+        "end": [
+          360.0,
+          480.0
+        ],
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "LINE",
+        "layer": "A-WALL-PRHT",
+        "handle": "9A",
+        "start": [
+          564.0,
+          0.0
+        ],
+        "end": [
+          564.0,
+          144.0
+        ],
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "LINE",
+        "layer": "A-WALL-PRHT",
+        "handle": "9B",
+        "start": [
+          360.0,
+          168.0
+        ],
+        "end": [
+          720.0,
+          168.0
+        ],
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "LINE",
+        "layer": "A-WALL-PRHT",
+        "handle": "9C",
+        "start": [
+          480.0,
+          168.0
+        ],
+        "end": [
+          480.0,
+          264.0
+        ],
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "LINE",
+        "layer": "A-WALL-PRHT",
+        "handle": "9D",
+        "start": [
+          600.0,
+          168.0
+        ],
+        "end": [
+          600.0,
+          264.0
+        ],
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "LINE",
+        "layer": "A-WALL-PRHT",
+        "handle": "9E",
+        "start": [
+          0.0,
+          264.0
+        ],
+        "end": [
+          360.0,
+          264.0
+        ],
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "LINE",
+        "layer": "A-WALL-PRHT",
+        "handle": "9F",
+        "start": [
+          360.0,
+          312.0
+        ],
+        "end": [
+          720.0,
+          312.0
+        ],
+        "color": 256,
+        "linetype": "BYLAYER"
+      }
+    ],
+    "A-DOOR": [
+      {
+        "dxf_type": "ARC",
+        "layer": "A-DOOR",
+        "handle": "A0",
+        "center": [
+          360.0,
+          132.0
+        ],
+        "radius": 36.0,
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "start_angle": 0.0,
+          "end_angle": 90.0
+        }
+      },
+      {
+        "dxf_type": "ARC",
+        "layer": "A-DOOR",
+        "handle": "A1",
+        "center": [
+          570.0,
+          96.0
+        ],
+        "radius": 36.0,
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "start_angle": 90.0,
+          "end_angle": 180.0
+        }
+      },
+      {
+        "dxf_type": "ARC",
+        "layer": "A-DOOR",
+        "handle": "A2",
+        "center": [
+          432.0,
+          174.0
+        ],
+        "radius": 36.0,
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "start_angle": 0.0,
+          "end_angle": 90.0
+        }
+      },
+      {
+        "dxf_type": "ARC",
+        "layer": "A-DOOR",
+        "handle": "A3",
+        "center": [
+          528.0,
+          174.0
+        ],
+        "radius": 36.0,
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "start_angle": 0.0,
+          "end_angle": 90.0
+        }
+      },
+      {
+        "dxf_type": "ARC",
+        "layer": "A-DOOR",
+        "handle": "A4",
+        "center": [
+          672.0,
+          174.0
+        ],
+        "radius": 36.0,
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "start_angle": 0.0,
+          "end_angle": 90.0
+        }
+      },
+      {
+        "dxf_type": "ARC",
+        "layer": "A-DOOR",
+        "handle": "A5",
+        "center": [
+          366.0,
+          360.0
+        ],
+        "radius": 36.0,
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "start_angle": 90.0,
+          "end_angle": 180.0
+        }
+      },
+      {
+        "dxf_type": "ARC",
+        "layer": "A-DOOR",
+        "handle": "A6",
+        "center": [
+          384.0,
+          306.0
+        ],
+        "radius": 36.0,
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "start_angle": 0.0,
+          "end_angle": 90.0
+        }
+      }
+    ],
+    "S-COLS": [
+      {
+        "dxf_type": "LWPOLYLINE",
+        "layer": "S-COLS",
+        "handle": "A7",
+        "points": [
+          [
+            185.0,
+            137.0
+          ],
+          [
+            199.0,
+            137.0
+          ],
+          [
+            199.0,
+            151.0
+          ],
+          [
+            185.0,
+            151.0
+          ]
+        ],
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "is_closed": true
+        }
+      },
+      {
+        "dxf_type": "LWPOLYLINE",
+        "layer": "S-COLS",
+        "handle": "A8",
+        "points": [
+          [
+            185.0,
+            353.0
+          ],
+          [
+            199.0,
+            353.0
+          ],
+          [
+            199.0,
+            367.0
+          ],
+          [
+            185.0,
+            367.0
+          ]
+        ],
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "is_closed": true
+        }
+      },
+      {
+        "dxf_type": "LWPOLYLINE",
+        "layer": "S-COLS",
+        "handle": "A9",
+        "points": [
+          [
+            521.0,
+            353.0
+          ],
+          [
+            535.0,
+            353.0
+          ],
+          [
+            535.0,
+            367.0
+          ],
+          [
+            521.0,
+            367.0
+          ]
+        ],
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "is_closed": true
+        }
+      }
+    ],
+    "S-BEAM": [
+      {
+        "dxf_type": "LINE",
+        "layer": "S-BEAM",
+        "handle": "AA",
+        "start": [
+          120.0,
+          108.0
+        ],
+        "end": [
+          336.0,
+          108.0
+        ],
+        "color": 256,
+        "linetype": "DASHED"
+      },
+      {
+        "dxf_type": "LINE",
+        "layer": "S-BEAM",
+        "handle": "AB",
+        "start": [
+          120.0,
+          360.0
+        ],
+        "end": [
+          336.0,
+          360.0
+        ],
+        "color": 256,
+        "linetype": "DASHED"
+      }
+    ],
+    "M-HVAC-DUCT": [
+      {
+        "dxf_type": "LWPOLYLINE",
+        "layer": "M-HVAC-DUCT",
+        "handle": "AC",
+        "points": [
+          [
+            72.0,
+            108.0
+          ],
+          [
+            336.0,
+            108.0
+          ],
+          [
+            336.0,
+            120.0
+          ],
+          [
+            72.0,
+            120.0
+          ]
+        ],
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "is_closed": true
+        }
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "M-HVAC-DUCT",
+        "handle": "AD",
+        "start": [
+          204.0,
+          124.0
+        ],
+        "text": "24\"x12\" SA",
+        "height": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "LWPOLYLINE",
+        "layer": "M-HVAC-DUCT",
+        "handle": "AE",
+        "points": [
+          [
+            72.0,
+            360.0
+          ],
+          [
+            336.0,
+            360.0
+          ],
+          [
+            336.0,
+            372.0
+          ],
+          [
+            72.0,
+            372.0
+          ]
+        ],
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "is_closed": true
+        }
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "M-HVAC-DUCT",
+        "handle": "AF",
+        "start": [
+          204.0,
+          376.0
+        ],
+        "text": "24\"x12\" SA",
+        "height": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      }
+    ],
+    "FP-SPRK": [
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "B0",
+        "center": [
+          108.0,
+          78.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "B1",
+        "center": [
+          108.0,
+          78.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "B3",
+        "center": [
+          276.0,
+          78.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "B4",
+        "center": [
+          276.0,
+          78.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "B6",
+        "center": [
+          108.0,
+          186.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "B7",
+        "center": [
+          108.0,
+          186.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "B9",
+        "center": [
+          276.0,
+          186.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "BA",
+        "center": [
+          276.0,
+          186.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "BC",
+        "center": [
+          468.0,
+          96.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "BD",
+        "center": [
+          468.0,
+          96.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "BF",
+        "center": [
+          636.0,
+          96.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "C0",
+        "center": [
+          636.0,
+          96.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "C2",
+        "center": [
+          432.0,
+          240.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "LWPOLYLINE",
+        "layer": "FP-SPRK",
+        "handle": "C3",
+        "points": [
+          [
+            430.0,
+            238.0
+          ],
+          [
+            434.0,
+            238.0
+          ],
+          [
+            434.0,
+            242.0
+          ],
+          [
+            430.0,
+            242.0
+          ]
+        ],
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "is_closed": true
+        }
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "C5",
+        "center": [
+          108.0,
+          312.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "C6",
+        "center": [
+          108.0,
+          312.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "C8",
+        "center": [
+          276.0,
+          312.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "C9",
+        "center": [
+          276.0,
+          312.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "CB",
+        "center": [
+          108.0,
+          408.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "CC",
+        "center": [
+          108.0,
+          408.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "CE",
+        "center": [
+          276.0,
+          408.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "CF",
+        "center": [
+          276.0,
+          408.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "D1",
+        "center": [
+          436.0,
+          384.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "D2",
+        "center": [
+          436.0,
+          384.0
+        ],
+        "radius": 6.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "D4",
+        "center": [
+          540.0,
+          384.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "D5",
+        "center": [
+          540.0,
+          384.0
+        ],
+        "radius": 6.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "D7",
+        "center": [
+          644.0,
+          384.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "D8",
+        "center": [
+          644.0,
+          384.0
+        ],
+        "radius": 6.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "DA",
+        "center": [
+          369.0,
+          96.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "DB",
+        "center": [
+          369.0,
+          96.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "DD",
+        "center": [
+          369.0,
+          168.0
+        ],
+        "radius": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-SPRK",
+        "handle": "DE",
+        "center": [
+          369.0,
+          168.0
+        ],
+        "radius": 0.8,
+        "color": 256,
+        "linetype": "BYLAYER"
+      }
+    ],
+    "FP-NOTE": [
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "B2",
+        "start": [
+          116.0,
+          76.5
+        ],
+        "text": "SP-1",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "B5",
+        "start": [
+          284.0,
+          76.5
+        ],
+        "text": "SP-2",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "B8",
+        "start": [
+          116.0,
+          184.5
+        ],
+        "text": "SP-3",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "BB",
+        "start": [
+          284.0,
+          184.5
+        ],
+        "text": "SP-4",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "BE",
+        "start": [
+          476.0,
+          94.5
+        ],
+        "text": "SPRK",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "C1",
+        "start": [
+          644.0,
+          94.5
+        ],
+        "text": "K8.0",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "C4",
+        "start": [
+          440.0,
+          238.5
+        ],
+        "text": "CONC",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "C7",
+        "start": [
+          116.0,
+          310.5
+        ],
+        "text": "PENDENT",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "CA",
+        "start": [
+          284.0,
+          310.5
+        ],
+        "text": "PENDENT",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "CD",
+        "start": [
+          116.0,
+          406.5
+        ],
+        "text": "PENDENT",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "D0",
+        "start": [
+          284.0,
+          406.5
+        ],
+        "text": "PENDENT",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "D3",
+        "start": [
+          444.0,
+          382.5
+        ],
+        "text": "ESFR",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "D6",
+        "start": [
+          548.0,
+          382.5
+        ],
+        "text": "ESFR",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "D9",
+        "start": [
+          652.0,
+          382.5
+        ],
+        "text": "ESFR",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "DC",
+        "start": [
+          377.0,
+          94.5
+        ],
+        "text": "SP-WC",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "DF",
+        "start": [
+          377.0,
+          166.5
+        ],
+        "text": "SP-WC",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-NOTE",
+        "handle": "E2",
+        "start": [
+          680.0,
+          440.0
+        ],
+        "text": "MAIN RISER",
+        "height": 4.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      }
+    ],
+    "FP-RISR": [
+      {
+        "dxf_type": "CIRCLE",
+        "layer": "FP-RISR",
+        "handle": "E0",
+        "center": [
+          696.0,
+          456.0
+        ],
+        "radius": 8.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "FP-RISR",
+        "handle": "E1",
+        "start": [
+          696.0,
+          456.0
+        ],
+        "text": "R",
+        "height": 8.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      }
+    ],
+    "TITLEBLOCK": [
+      {
+        "dxf_type": "LWPOLYLINE",
+        "layer": "TITLEBLOCK",
+        "handle": "EB",
+        "points": [
+          [
+            480.0,
+            -60.0
+          ],
+          [
+            720.0,
+            -60.0
+          ],
+          [
+            720.0,
+            -12.0
+          ],
+          [
+            480.0,
+            -12.0
+          ]
+        ],
+        "color": 256,
+        "linetype": "BYLAYER",
+        "attribs": {
+          "is_closed": true
+        }
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "TITLEBLOCK",
+        "handle": "EC",
+        "start": [
+          486.0,
+          -24.0
+        ],
+        "text": "PROJECT:   SAMPLE COMMERCIAL BUILDING",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "TITLEBLOCK",
+        "handle": "ED",
+        "start": [
+          486.0,
+          -36.0
+        ],
+        "text": "DRAWING:   FP-1.00 FIRE SPRINKLER PLAN",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "TITLEBLOCK",
+        "handle": "EE",
+        "start": [
+          486.0,
+          -48.0
+        ],
+        "text": "SCALE:     1/8\" = 1'-0\"",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      },
+      {
+        "dxf_type": "TEXT",
+        "layer": "TITLEBLOCK",
+        "handle": "EF",
+        "start": [
+          486.0,
+          -58.0
+        ],
+        "text": "DATE:      05/14/2026",
+        "height": 3.0,
+        "color": 256,
+        "linetype": "BYLAYER"
+      }
+    ]
+  }
+}
